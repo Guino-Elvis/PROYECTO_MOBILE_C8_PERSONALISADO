@@ -41,24 +41,13 @@ public class ImagenServiceImpl implements ImagenService{
                 .orElseThrow(() -> new EntityNotFoundException("Imagen no encontrado"));
         // Solo actualiza los campos que deseas cambiar
         imagenExistente.setUrl(imagen.getUrl());
-        imagenExistente.setProducto(imagen.getProducto());
         // Guarda los cambios
         return imagenRepository.save(imagenExistente);
     }
 
     @Override
     public Optional<Imagen> listarPorId(Integer id) {
-        Imagen imagen = imagenRepository.findById(id).orElse(null);
-        if (imagen != null) {
-            System.out.println("Antes de la petición");
-            Optional<Producto> productoOptional = productoService
-                    .listarPorId(imagen.getProducto().getId());
-            if (productoOptional.isPresent()) {
-                Producto producto = productoOptional.get();
-                imagen.setProducto(producto);
-            }
-        }
-        return Optional.ofNullable(imagen);
+        return imagenRepository.findById(id);
     }
 
     @Override
