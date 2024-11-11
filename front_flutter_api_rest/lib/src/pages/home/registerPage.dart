@@ -35,6 +35,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.white,
       body: LoginRegisterComponent(
         titleLogin: 'Register',
         additionalWidgets: [
