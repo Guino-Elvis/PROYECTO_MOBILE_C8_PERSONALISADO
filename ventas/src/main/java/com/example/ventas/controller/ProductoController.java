@@ -1,6 +1,5 @@
 package com.example.ventas.controller;
 
-import com.example.ventas.entity.Categoria;
 import com.example.ventas.entity.Producto;
 
 import com.example.ventas.service.ProductoService;

@@ -28,7 +28,8 @@ public class Producto {
     private SubCategoria subCategoria;
 
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference  // Marca el lado "principal" de la relación
     private List<Imagen> imagenes;  // Nueva lista para las imágenes asociadas
 
