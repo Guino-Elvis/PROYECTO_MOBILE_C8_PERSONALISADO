@@ -20,14 +20,16 @@ public class Producto {
     private String precio;
     private String stock;
     private String foto;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_categoria_id")
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private SubCategoria subCategoria;
 
-
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "imagen_id")
     private List<Imagen> imagenes; 
 
     private String estado;
