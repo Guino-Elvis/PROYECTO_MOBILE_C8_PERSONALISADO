@@ -26,11 +26,10 @@ public class Producto {
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private SubCategoria subCategoria;
 
-    
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "imagen_id")
-    private List<Imagen> imagenes; 
+    private List<Imagen> imagenes;  // Nueva lista para las imágenes asociadas
 
     private String estado;
     private LocalDateTime createdAt;
@@ -38,12 +37,12 @@ public class Producto {
 
     @PrePersist
     private void prePersist() {
-        createdAt = LocalDateTime.now(); // Se establece solo al crear
-        updatedAt = LocalDateTime.now(); // Se establece al crear
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     private void preUpdate() {
-        updatedAt = LocalDateTime.now(); // Se actualiza solo al modificar
+        updatedAt = LocalDateTime.now();
     }
 }

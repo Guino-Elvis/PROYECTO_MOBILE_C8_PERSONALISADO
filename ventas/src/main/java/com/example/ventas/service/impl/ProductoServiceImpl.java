@@ -6,8 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ventas.entity.Imagen;
 import com.example.ventas.entity.Producto;
 import com.example.ventas.entity.SubCategoria;
+import com.example.ventas.repository.ImagenRepository;
 import com.example.ventas.repository.ProductoRepository;
 import com.example.ventas.service.ProductoService;
 
@@ -21,6 +23,9 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private ImagenRepository imagenRepository; // Inyectamos el repositorio de Imagen
 
     @Override
     public List<Producto> buscar(String nombre, LocalDateTime createdAt, LocalDateTime updatedAt, String estado) {
@@ -37,11 +42,6 @@ public class ProductoServiceImpl implements ProductoService {
         return productoRepository.save(producto);
     }
 
-    // @Override
-    // public Producto actualizar(Producto producto) {
-    // return productoRepository.save(producto);
-    // }
-
     @Override
     public Producto actualizar(Producto producto) {
 
@@ -54,7 +54,6 @@ public class ProductoServiceImpl implements ProductoService {
         productoExistente.setStock(producto.getStock());
         productoExistente.setFoto(producto.getFoto());
         productoExistente.setSubCategoria(producto.getSubCategoria());
-        productoExistente.setImagenes(producto.getImagenes());
         productoExistente.setEstado(producto.getEstado());
         // Guarda los cambios
         return productoRepository.save(productoExistente);
@@ -64,15 +63,19 @@ public class ProductoServiceImpl implements ProductoService {
     public Optional<Producto> listarPorId(Integer id) {
         Producto producto = productoRepository.findById(id).orElse(null);
         if (producto != null) {
-            System.out.println("Antes de la petición");
+            // Obtener la subcategoría
             Optional<SubCategoria> subCategoriaOptional = subCategoriaService
                     .listarPorId(producto.getSubCategoria().getId());
             if (subCategoriaOptional.isPresent()) {
                 SubCategoria subCategoria = subCategoriaOptional.get();
                 producto.setSubCategoria(subCategoria);
             }
+    
+            // Obtener las imágenes asociadas al producto
+            List<Imagen> imagenes = imagenRepository.findByProductoId(id);
+            producto.setImagenes(imagenes);  // Suponiendo que agregaste un campo List<Imagen> en Producto
         }
-
+    
         return Optional.ofNullable(producto);
     }
 
