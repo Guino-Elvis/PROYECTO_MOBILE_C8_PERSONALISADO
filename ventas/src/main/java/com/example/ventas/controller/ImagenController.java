@@ -16,11 +16,7 @@ public class ImagenController {
     @Autowired
     private ImagenService imagenService;
 
-    @GetMapping("/imagenPorSubCategoria/{idProducto}")
-    public ResponseEntity<List<Imagen>> listarImagenPorProducto(@PathVariable Integer idProducto) {
-        List<Imagen> Imagens = imagenService.listarPorProducto(idProducto);
-        return ResponseEntity.ok(Imagens);
-    }
+
 
     @GetMapping()
     public ResponseEntity<List<Imagen>> list() {
