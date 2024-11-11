@@ -4,7 +4,6 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.ventas.entity.Imagen;
-import com.example.ventas.entity.Producto;
 import com.example.ventas.service.ImagenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,11 +5,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.example.ventas.entity.Imagen;
 import com.example.ventas.repository.ImagenRepository;
 import com.example.ventas.service.ImagenService;
 
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ImagenServiceImpl implements ImagenService {
@@ -41,7 +41,7 @@ public class ImagenServiceImpl implements ImagenService {
     public void eliminarPorId(Integer id) {
         imagenRepository.deleteById(id);
     }
-    
+
     @Override
     public List<Imagen> listarPorProducto(Integer idProducto) {
         // Obtener la lista de Imagens por categoría directamente desde el
