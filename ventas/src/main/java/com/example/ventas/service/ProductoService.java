@@ -18,7 +18,7 @@ public interface ProductoService {
     public void eliminarPorId(Integer id);
 
     // Otros métodos existentes
-    List<Producto> listarPorSubCategoria(Integer idEvento);
+    List<Producto> listarPorSubCategoria(Integer idSubCategoria);
 
     List<Producto> buscar(String nombre, LocalDateTime createdAt, LocalDateTime updatedAt, String estado);
 }

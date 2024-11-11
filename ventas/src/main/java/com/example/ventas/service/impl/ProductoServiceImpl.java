@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.example.ventas.entity.Categoria;
 import com.example.ventas.entity.Producto;
 import com.example.ventas.entity.SubCategoria;
 import com.example.ventas.repository.ProductoRepository;

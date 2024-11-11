@@ -3,6 +3,7 @@ package com.example.ventas.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -23,6 +24,12 @@ public class Producto {
     @JoinColumn(name = "sub_categoria_id")
     @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private SubCategoria subCategoria;
+
+
+    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    private List<Imagen> imagenes; 
+
     private String estado;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

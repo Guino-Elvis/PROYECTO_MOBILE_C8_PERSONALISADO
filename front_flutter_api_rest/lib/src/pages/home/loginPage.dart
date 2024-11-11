@@ -33,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Colors.white,
       body: LoginRegisterComponent(
         titleLogin: 'Login',
         additionalWidgets: [
@@ -137,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         if (response) {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
-                            '/home', 
+                            '/home',
                             (route) => false,
                           );
                         } else {
