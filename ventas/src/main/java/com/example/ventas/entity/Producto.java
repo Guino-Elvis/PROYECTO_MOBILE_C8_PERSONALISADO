@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.Data;
 
@@ -28,7 +29,7 @@ public class Producto {
 
 
     @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @JsonManagedReference  // Marca el lado "principal" de la relación
     private List<Imagen> imagenes;  // Nueva lista para las imágenes asociadas
 
     private String estado;

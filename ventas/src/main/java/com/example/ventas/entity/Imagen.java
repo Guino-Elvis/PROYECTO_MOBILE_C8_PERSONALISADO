@@ -1,4 +1,5 @@
 package com.example.ventas.entity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ public class Imagen {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = true, foreignKey = @ForeignKey(name = "fk_producto_imagen", value = ConstraintMode.CONSTRAINT))
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+    @JsonBackReference  // Marca el lado "secundario" de la relación
     private Producto producto;
 
 }
