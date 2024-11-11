@@ -29,7 +29,7 @@ spring:
         - id: ventas-service
           uri: lb://ventas-service
           predicates:
-            - Path=/categoria/**,/subcategoria/**,/producto/**    
+            - Path=/categoria/**,/subcategoria/**,/imagen**/producto/**    
         - id: auth-service
           uri: lb://auth-service
           predicates:
