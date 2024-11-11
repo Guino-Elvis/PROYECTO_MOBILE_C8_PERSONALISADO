@@ -18,5 +18,6 @@ public interface ImagenService {
 
     public void eliminarPorId(Integer id);
 
-
+    // Otros métodos existentes
+    List<Imagen> listarPorProducto(Integer idProducto);
 }
