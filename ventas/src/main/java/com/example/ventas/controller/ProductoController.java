@@ -1,7 +1,7 @@
 package com.example.ventas.controller;
 
 import com.example.ventas.entity.Producto;
-
+import com.example.ventas.service.ImagenService;
 import com.example.ventas.service.ProductoService;
 
 import java.time.LocalDateTime;
@@ -15,6 +15,9 @@ import org.springframework.http.ResponseEntity;
 public class ProductoController {
     @Autowired
     private ProductoService productoService;
+
+    @Autowired
+    private ImagenService imagenService; // Esta es la inyección de dependencias
 
     @GetMapping("/productoPorSubCategoria/{idSubCategoria}")
     public ResponseEntity<List<Producto>> listarProductosPorSubCategoria(@PathVariable Integer idSubCategoria) {
@@ -56,6 +59,13 @@ public class ProductoController {
     @DeleteMapping("/{id}")
     public String deleteById(@PathVariable(required = true) Integer id) {
         productoService.eliminarPorId(id);
+        return "Eliminacion Correcta";
+    }
+
+    //imagen eliminar
+    @DeleteMapping("imagen/{id}")
+    public String deleteImagenById(@PathVariable(required = true) Integer id) {
+        imagenService.eliminarPorId(id);
         return "Eliminacion Correcta";
     }
 }
