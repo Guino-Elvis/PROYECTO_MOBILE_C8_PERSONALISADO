@@ -1,3 +1,5 @@
+import 'package:front_flutter_api_rest/src/model/imagenModel.dart';
+
 class ProductoModel {
   int? id;
   String? nombre;
@@ -6,12 +8,12 @@ class ProductoModel {
   String? stock;
   String? foto;
   Map<String, dynamic>? subCategoria;
+  List<Imagenes>? imagenes;
   String? estado;
   String? createdAt;
   String? updatedAt;
   // Constructor
-  ProductoModel(
-    {
+  ProductoModel({
     this.id,
     this.nombre,
     this.descrip,
@@ -19,6 +21,7 @@ class ProductoModel {
     this.stock,
     this.foto,
     this.subCategoria,
+    this.imagenes,
     this.estado,
     this.createdAt,
     this.updatedAt,
@@ -34,6 +37,9 @@ class ProductoModel {
       stock: json['stock'] as String?,
       foto: json['foto'] as String?,
       subCategoria: json['subCategoria'] as Map<String, dynamic>?,
+      imagenes: json['imagenes'] != null
+          ? (json['imagenes'] as List).map((v) => Imagenes.fromJson(v)).toList()
+          : null,
       estado: json['estado'] as String?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
@@ -49,7 +55,7 @@ class ProductoModel {
       'precio': precio,
       'stock': stock,
       'foto': foto,
-      'subCategoria': subCategoria, 
+      'subCategoria': subCategoria,
       'estado': estado,
     };
   }

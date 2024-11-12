@@ -1,5 +1,6 @@
 package com.example.ventas.controller;
 
+import com.example.ventas.entity.Imagen;
 import com.example.ventas.entity.Producto;
 import com.example.ventas.service.ImagenService;
 import com.example.ventas.service.ProductoService;
@@ -62,7 +63,13 @@ public class ProductoController {
         return "Eliminacion Correcta";
     }
 
-    //imagen eliminar
+    // // imagen listar id
+    // @GetMapping("listar/imagen/{id}")
+    // public ResponseEntity<Imagen> listImagenById(@PathVariable(required = true) Integer id) {
+    //     return ResponseEntity.ok().body(imagenService.listarPorId(id).get());
+    // }
+
+    // imagen eliminar
     @DeleteMapping("imagen/{id}")
     public String deleteImagenById(@PathVariable(required = true) Integer id) {
         imagenService.eliminarPorId(id);

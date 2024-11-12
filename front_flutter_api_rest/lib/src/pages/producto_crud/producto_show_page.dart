@@ -93,7 +93,7 @@ class _ProductoShowPageState extends State<ProductoShowPage> {
               child: ClipPath(
                 clipper: WaveClipperOne(reverse: true),
                 child: Container(
-                  height: 520,
+                  height: 820,
                   width: MediaQuery.of(context)
                       .size
                       .width, // Establecer la altura según la pantalla
@@ -373,7 +373,68 @@ class _ProductoShowPageState extends State<ProductoShowPage> {
                               ),
                             ),
                           ],
-                        )
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          height: 400,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                // Lista de imágenes con un GridView para mostrar 2 imágenes por fila y un icono de corazón
+                                GridView.builder(
+                                  shrinkWrap:
+                                      true, // Permite que el GridView ocupe solo el espacio necesario
+                                  physics:
+                                      NeverScrollableScrollPhysics(), // Deshabilita el scroll interno en GridView
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        2, // Número de imágenes por fila
+                                    crossAxisSpacing:
+                                        8, // Espacio entre columnas
+                                    mainAxisSpacing: 8, // Espacio entre filas
+                                  ),
+                                  itemCount: widget.item.imagenes?.length ??
+                                      0, // Número total de imágenes
+                                  itemBuilder: (context, index) {
+                                    return Stack(
+                                      children: [
+                                        // Imagen
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                              10), // Bordes redondeados
+                                          child: Image.network(
+                                            widget.item.imagenes![index].url ??
+                                                'URL no disponible',
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                            fit: BoxFit
+                                                .cover, // Ajuste de imagen
+                                          ),
+                                        ),
+                                        // Icono de corazón
+                                        Positioned(
+                                          top:
+                                              8, // Posición desde el borde superior
+                                          right:
+                                              8, // Posición desde el borde derecho
+                                          child: Icon(
+                                            Icons
+                                                .favorite_border, // Icono de corazón (borde)
+                                            color: Colors
+                                                .white, // Color blanco para contraste
+                                            size: 24, // Tamaño del icono
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),

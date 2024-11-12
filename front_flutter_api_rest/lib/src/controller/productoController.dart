@@ -198,7 +198,9 @@ class ProductoController {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        final data = json.decode(response.body);
+        print('Datos recibidos: $data'); // Agrega este print para ver los datos
+        return data;
       } else {
         throw Exception('Failed to load Productos');
       }
