@@ -44,7 +44,7 @@ public class ImagenController {
         return ResponseEntity.ok().body(imagenService.listarPorId(id).get());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("eliminar/{id}")
     public ResponseEntity<String> deleteById(@PathVariable(required = true) Integer id) {
         try {
             imagenService.eliminarPorId(id);
