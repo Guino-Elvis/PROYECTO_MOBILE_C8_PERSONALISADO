@@ -17,7 +17,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   void initState() {
     super.initState();
-   
+
     Future.delayed(Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, AppRoutes.loginRoute);
     });
@@ -81,13 +81,11 @@ class _WelcomePageState extends State<WelcomePage> {
                         animatedTexts: [
                           TyperAnimatedText(
                             'Pontelo tu',
-                            speed: Duration(
-                                milliseconds:
-                                    200), 
+                            speed: Duration(milliseconds: 200),
                           ),
                         ],
                         repeatForever: false,
-                        totalRepeatCount: 1, 
+                        totalRepeatCount: 1,
                       ),
                     ),
                   ),

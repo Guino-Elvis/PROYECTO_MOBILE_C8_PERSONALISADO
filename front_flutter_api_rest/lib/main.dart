@@ -1,35 +1,87 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:front_flutter_api_rest/src/controller/auth/authController.dart';
+import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/routes/route.dart';
+import 'package:front_flutter_api_rest/src/services/carrito.dart';
 import 'package:front_flutter_api_rest/src/services/firebase_service.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  UsuarioController();
+
+  // Inicializa Firebase
   await Firebase.initializeApp(
     options: FirebaseConfig.options,
   );
+
+  // Inicializa Hive
+  await initializeHive();
+
   final themeProvider = ThemeProvider();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: themeProvider),
+        ChangeNotifierProvider(
+            create: (_) => CartService()), // Proveedor de CartService
+        ChangeNotifierProvider<ThemeProvider>(
+            create: (_) => themeProvider), // Proveedor de ThemeProvider
       ],
-      // ignore: prefer_const_constructors
       child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// Función para inicializar Hive y abrir la caja 'cart'
+Future<void> initializeHive() async {
+  final appDocumentDirectory = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentDirectory.path);
+
+  // Registramos el adaptador del modelo de ProductoCacheModel
+  Hive.registerAdapter(ProductoCacheModelAdapter());
+
+  // Intentamos abrir la caja 'cart' solo si no está abierta.
+  try {
+    if (!Hive.isBoxOpen('cart')) {
+      print('Abriendo la caja "cart"');
+      await Hive.openBox<ProductoCacheModel>('cart');
+    } else {
+      print('La caja "cart" ya estaba abierta');
+    }
+  } catch (e) {
+    print('Error al abrir la caja: $e');
+  }
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    // Cierra todas las cajas abiertas al cerrar la app
+    Hive.close();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

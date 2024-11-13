@@ -1,10 +1,17 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:front_flutter_api_rest/src/components/app_bar_shop.dart';
+import 'package:front_flutter_api_rest/src/components/button_bar.dart';
 import 'package:front_flutter_api_rest/src/components/drawers.dart';
-import 'package:front_flutter_api_rest/src/services/api.dart';
-
-
+import 'package:front_flutter_api_rest/src/pages/home/sections/category_section.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/producto_section.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/search_section.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/producto_subcategoria_section.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/slider_section.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/sub_category_section.dart';
+import 'package:front_flutter_api_rest/src/providers/theme.dart';
+import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget {
   @override
@@ -13,45 +20,58 @@ class UserHomePage extends StatefulWidget {
 
 class _UserHomePageState extends State<UserHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
- 
+  void _onPres() {
+    // Implementa la lógica del botón aquí
+  }
   @override
   void initState() {
     super.initState();
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
-  
   }
- @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    key: _scaffoldKey,
-    appBar: AppBar(
-      title: Text(ConfigApi.appName),
-      elevation: 0,
-      actions: [
-        IconButton(
-          onPressed: () {
-           
-          },
-          icon: const Icon(
-            Icons.logout,
-            color: Colors.black,
-          ),
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final themeColors = themeProvider.getThemeColors();
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBarShow(
+        appBarColor: themeProvider.isDiurno ? themeColors[2] : themeColors[0],
+      ),
+      drawer: NavigationDrawerWidget(),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SearchSection(),
+            SliderSection(),
+            SizedBox(height: 10),
+            CategoriSection(),
+            SizedBox(height: 10),
+            SubCategoriSection(),
+            SizedBox(height: 10),
+            ProductoSubCategoriaSection(),
+            SizedBox(height: 10),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              alignment: AlignmentDirectional.centerStart,
+              child: Text(
+                'Te puede gustar',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            ProductoSection(),
+          ],
         ),
-      ],
-    ),
-    drawer: NavigationDrawerWidget(),
-    backgroundColor: Colors.grey[200],
-    body: Column(
-      children: [
-        Container(
-          child: Text('holaaa SOY USER'),
-        )
-      ],
-    ),
-  );
-}
-
-
-
+      ),
+      bottomNavigationBar: BottomNavBarFlex(
+        buttonColor: Colors.red,
+      ),
+    );
+  }
 }

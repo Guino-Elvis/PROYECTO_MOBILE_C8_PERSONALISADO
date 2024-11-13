@@ -83,6 +83,14 @@ class _ProductolistPageState extends State<ProductolistPage> {
     );
   }
 
+  String truncateText(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.substring(0, maxLength) + "...";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
@@ -320,8 +328,10 @@ class _ProductolistPageState extends State<ProductolistPage> {
                                               ),
                                               SizedBox(width: 8),
                                               Text(
-                                                producto.descrip ??
-                                                    'No hay descrip',
+                                                truncateText(
+                                                    producto.descrip ??
+                                                        'No hay nombre',
+                                                    20),
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontWeight:

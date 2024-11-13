@@ -2,6 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<key>CFBundleURLTypes</key>
+    <!-- paypal -->
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>yourapp</string>  <!-- Reemplazar con tu esquema de URL -->
+    </array>
+  </dict>
+</array>
+	<!-- end paypal -->
     <!-- permisos necesarios para imagen -->
     <key>NSFileProviderDomainUsageDescription</key>
     <string>La aplicación necesita acceso al sistema de archivos para guardar archivos.</string>

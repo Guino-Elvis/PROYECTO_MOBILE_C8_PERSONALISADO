@@ -93,7 +93,7 @@ class _ProductoShowPageState extends State<ProductoShowPage> {
               child: ClipPath(
                 clipper: WaveClipperOne(reverse: true),
                 child: Container(
-                  height: 820,
+                  height: 920,
                   width: MediaQuery.of(context)
                       .size
                       .width, // Establecer la altura según la pantalla
@@ -148,7 +148,7 @@ class _ProductoShowPageState extends State<ProductoShowPage> {
                                     SizedBox(width: 8),
                                     Text(
                                       widget.item.nombre.toString() ??
-                                          'no hay descrip',
+                                          'no hay nombre',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -166,12 +166,15 @@ class _ProductoShowPageState extends State<ProductoShowPage> {
                                       ),
                                     ),
                                     SizedBox(width: 8),
-                                    Text(
-                                      widget.item.descrip.toString() ??
-                                          'no hay descrip',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    Container(
+                                      width: 150,
+                                      child: Text(
+                                        widget.item.descrip.toString() ??
+                                            'no hay descrip',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                   ],
