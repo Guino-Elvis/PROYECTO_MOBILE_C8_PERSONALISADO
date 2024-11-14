@@ -45,6 +45,8 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int cartCount = cartService.getCartCount();
+    String cartCountStr = cartCount.toString();
     return Scaffold(
       appBar: AppBar(
         title: Text("Carrito de Compras"),
@@ -80,24 +82,38 @@ class _CartScreenState extends State<CartScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text('Precio: \$${product.precio}'),
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.remove),
-                              onPressed: () {
-                                if (product.cantidad > 1) {
-                                  updateQuantity(index, product.cantidad - 1);
-                                }
-                              },
-                            ),
-                            Text('Cantidad: ${product.cantidad}'),
-                            IconButton(
-                              icon: Icon(Icons.add),
-                              onPressed: () {
-                                updateQuantity(index, product.cantidad + 1);
-                              },
-                            ),
-                          ],
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.remove),
+                                    onPressed: () {
+                                      if (product.cantidad > 1) {
+                                        updateQuantity(
+                                            index, product.cantidad - 1);
+                                      }
+                                    },
+                                  ),
+                                  Text('${product.cantidad}'),
+                                  IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {
+                                      updateQuantity(
+                                          index, product.cantidad + 1);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -122,20 +138,23 @@ class _CartScreenState extends State<CartScreen> {
           }
           double total = snapshot.data!.fold(0,
               (sum, item) => sum + double.parse(item.precio) * item.cantidad);
-          return Padding(
-            padding: EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PayPalButton(),
-                  ),
-                );
-              },
-              child: Text('Pagar - \$${total.toStringAsFixed(2)}'),
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
+          return SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PayPalButton(),
+                    ),
+                  );
+                },
+                child: Text(
+                    'Pagar (${cartCountStr}) - \$${total.toStringAsFixed(2)}'),
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                ),
               ),
             ),
           );

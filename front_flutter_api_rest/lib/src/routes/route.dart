@@ -41,10 +41,9 @@ class AppRoutes {
       subcategoriaListRoute: (context) => SubCategorialistPage(),
       productoListRoute: (context) => ProductolistPage(),
       usuarioListRoute: (context) => UsuariolistPage(),
-
       paySuccessRoute: (context) => PaymentSuccessScreen(),
       payErrorRoute: (context) => PaymentErrorScreen(),
-      approvalRoute: (context) => PaymentApprovalScreen(), // Aprobación de pago
+      approvalRoute: (context) => PaymentApprovalScreen(),
     };
   }
 }

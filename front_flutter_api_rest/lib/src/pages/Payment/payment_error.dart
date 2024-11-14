@@ -6,7 +6,7 @@ class PaymentErrorScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Error en el Pago")),
       body: Center(
-        child: Text("Lo sentimos, hubo un error con el pago."),
+        child: Text("Hubo un error con el pago. Inténtalo nuevamente."),
       ),
     );
   }
