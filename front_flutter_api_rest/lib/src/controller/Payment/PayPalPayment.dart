@@ -1,92 +1,99 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_paypal/flutter_paypal.dart';
+import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
+
 import 'package:front_flutter_api_rest/src/services/payKey.dart';
-import 'package:uni_links/uni_links.dart';
 
 class PayPalButton extends StatelessWidget {
   final String clientId = PaypalKey.YOUR_PAYPAL_CLIENT_ID;
   final String secret = PaypalKey.YOUR_PAYPAL_SECRET;
-
-  // Crear el pago y redirigir al usuario a PayPal
-  Future<void> createPayPalPayment(BuildContext context) async {
-    // Datos ficticios del carrito (simulación)
-    List<Map<String, dynamic>> cartDetails = [
-      {'price': 20.0, 'quantity': 2}, // Producto 1: 2 unidades de $20
-      {'price': 15.0, 'quantity': 1}, // Producto 2: 1 unidad de $15
-    ];
-
-    // Total ficticio en USD (sin tasas de cambio reales)
-    double totalInUSD = 20.0 * 2 + 15.0 * 1;
-
-    final paymentData = {
-      'intent': 'sale',
-      'payer': {'payment_method': 'paypal'},
-      'transactions': [
-        {
-          'amount': {
-            'total': totalInUSD.toString(),
-            'currency': 'USD',
-          },
-          'description': 'Compra de productos'
-        }
-      ],
-      'redirect_urls': {
-        'return_url':
-            'yourapp://paypal_return', // Redirige después de la aprobación
-        'cancel_url':
-            'yourapp://paypal_cancel', // Redirige si el pago es cancelado
-      }
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse('https://api.sandbox.paypal.com/v1/payments/payment'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization':
-              'Basic ' + base64Encode(utf8.encode('$clientId:$secret')),
-        },
-        body: jsonEncode(paymentData),
-      );
-
-      if (response.statusCode == 201) {
-        final payment = jsonDecode(response.body);
-        final approvalLink = payment['links'].firstWhere(
-          (link) => link['rel'] == 'approval_url',
-          orElse: () => null,
-        )['href'];
-
-        if (approvalLink != null) {
-          // Redirigir al usuario a la pantalla de aprobación de PayPal
-          Navigator.pushNamed(context, '/paymentApproval',
-              arguments: approvalLink);
-        } else {
-          print("Error al obtener el enlace de aprobación");
-        }
-      } else {
-        print("Error al crear el pago: ${response.body}");
-      }
-    } catch (e) {
-      print("Error al crear el pago: $e");
-    }
-  }
+  final String retorno = PaypalKey.returnURL;
+  final String cancelar = PaypalKey.cancelURL;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Pago con PayPal'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            createPayPalPayment(
-                context); // Iniciar el pago cuando el botón es presionado
-          },
-          child: Text('Pagar con PayPal'),
+        appBar: AppBar(
+          title: Text('hola'),
         ),
-      ),
-    );
+        body: Center(
+          child: TextButton(
+              onPressed: () => {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => UsePaypal(
+                            sandboxMode: true,
+                            clientId: clientId,
+                            secretKey: secret,
+                            returnURL: retorno,
+                            cancelURL: cancelar,
+                            transactions: const [
+                              {
+                                "amount": {
+                                  "total": '10.12',
+                                  "currency": "USD",
+                                  "details": {
+                                    "subtotal": '10.12',
+                                    "shipping": '0',
+                                    "shipping_discount": 0
+                                  }
+                                },
+                                "description":
+                                    "The payment transaction description.",
+                                // "payment_options": {
+                                //   "allowed_payment_method":
+                                //       "INSTANT_FUNDING_SOURCE"
+                                // },
+                                "item_list": {
+                                  "items": [
+                                    {
+                                      "name": "A demo product",
+                                      "quantity": 1,
+                                      "price": '10.12',
+                                      "currency": "USD"
+                                    }
+                                  ],
+
+                                  // shipping address is not required though
+                                  "shipping_address": {
+                                    "recipient_name": "Jane Foster",
+                                    "line1": "Travis County",
+                                    "line2": "",
+                                    "city": "Austin",
+                                    "country_code": "US",
+                                    "postal_code": "73301",
+                                    "phone": "+00000000",
+                                    "state": "Texas"
+                                  },
+                                }
+                              }
+                            ],
+                            note: "Contact us for any questions on your order.",
+                            onSuccess: (Map params) async {
+                              UiHelper.showAlertDialog(
+                                context,
+                                'Pago Exitoso',
+                                'El pago fue Exitoso. Felicidades',
+                                title: 'Exitoso',
+                              );
+                              print("onSuccess: $params");
+                            },
+                            onError: (error) {
+                              print("onError: $error");
+                            },
+                            onCancel: (params) {
+                              print('cancelled: $params');
+                              UiHelper.showAlertDialog(
+                                context,
+                                'Pago cancelado',
+                                'El pago fue cancelado. Si tienes dudas, por favor intenta nuevamente.',
+                                title: 'Cancelado',
+                              );
+                            }),
+                      ),
+                    )
+                  },
+              child: const Text("Make Payment")),
+        ));
   }
 }

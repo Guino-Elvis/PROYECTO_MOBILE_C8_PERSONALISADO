@@ -75,7 +75,10 @@ class _ProductoSectionState extends State<ProductoSection> {
           final producto = item[index];
           return Container(
             height: 320,
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+            padding: EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 2,
+            ),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
             ),
@@ -100,7 +103,6 @@ class _ProductoSectionState extends State<ProductoSection> {
                     width: 200,
                   ),
                   Container(
-                    padding: EdgeInsets.only(left: 8),
                     height: 140,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -135,7 +137,7 @@ class _ProductoSectionState extends State<ProductoSection> {
                     ),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                    padding: EdgeInsets.symmetric(vertical: 2),
                     child: Center(
                       child: InkWell(
                         onTap: () {
@@ -143,7 +145,7 @@ class _ProductoSectionState extends State<ProductoSection> {
                         },
                         child: Container(
                           padding:
-                              EdgeInsets.symmetric(horizontal: 50, vertical: 2),
+                              EdgeInsets.symmetric(horizontal: 40, vertical: 2),
                           color: Colors.blue,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,

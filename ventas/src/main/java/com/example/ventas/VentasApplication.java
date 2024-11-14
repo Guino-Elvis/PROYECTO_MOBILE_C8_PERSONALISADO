@@ -18,9 +18,9 @@ public class VentasApplication {
 	@Bean
 	public OpenAPI custoOpenAPI() {
 		return new OpenAPI().info(new Info()
-				.title("OPEN API MICROSERVICIOS BLIBIOTECA")
+				.title("OPEN API MICROSERVICIOS VENTAS")
 				.version("0.0.1")
-				.description("servicio web biblioteca")
+				.description("servicio web ventas")
 				.termsOfService("http://swagger.io/terms")
 				.license(new License().name("Apache 2.0").url("http://springdoc.org")));
 	}
