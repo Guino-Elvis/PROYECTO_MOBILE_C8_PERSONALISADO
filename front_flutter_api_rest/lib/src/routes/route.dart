@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
-import 'package:front_flutter_api_rest/src/pages/Payment/payment_approval.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_error.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_success.dart';
 import 'package:front_flutter_api_rest/src/pages/categoria_crud/category_list_page.dart';
@@ -47,9 +46,8 @@ class AppRoutes {
       usuarioListRoute: (context) => UsuariolistPage(),
       paySuccessRoute: (context) => PaymentSuccessScreen(),
       payErrorRoute: (context) => PaymentErrorScreen(),
-      approvalRoute: (context) => PaymentApprovalScreen(),
-      carritoRoute: (context) => CarritoPage(),
-      pasarelaRoute: (context) => PayPalButton(),
+      carritoRoute: (context) => CarritoPage(cliente: null),
+      pasarelaRoute: (context) => PayPalButton(cliente: null),
     };
   }
 }

@@ -18,7 +18,7 @@ public class Producto {
     private Integer id;
     private String nombre;
     private String descrip;
-    private String precio;
+    private Double precio;
     private String stock;
     private String foto;
 
@@ -46,5 +46,9 @@ public class Producto {
     @PreUpdate
     private void preUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public Producto() {
+        this.precio = (double) 0;
     }
 }

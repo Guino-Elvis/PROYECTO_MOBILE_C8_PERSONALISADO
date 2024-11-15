@@ -51,7 +51,7 @@ class _ProductoEditPageState extends State<ProductoEditPage> {
     // Cargar los datos del producto en los controladores
     _nombreController.text = widget.item.nombre ?? '';
     _descripController.text = widget.item.descrip ?? '';
-    _precioController.text = widget.item.precio ?? '';
+    _precioController.text = widget.item.precio?.toString() ?? '';
     _stockController.text = widget.item.stock ?? '';
     selectedEstado = widget.item.estado ?? '';
     selectedSubCategoria = widget.item.subCategoria?['id']?.toString();
@@ -140,12 +140,12 @@ class _ProductoEditPageState extends State<ProductoEditPage> {
         print("Error al cargar la imagen: $e");
       }
     }
-
+    double? precio = double.tryParse(_precioController.text);
     final productoEditado = ProductoModel(
       id: widget.item.id,
       nombre: _nombreController.text,
       descrip: _descripController.text,
-      precio: _precioController.text,
+      precio: precio,
       stock: _stockController.text,
       estado: selectedEstado ?? "",
       subCategoria: {'id': selectedSubCategoria},
