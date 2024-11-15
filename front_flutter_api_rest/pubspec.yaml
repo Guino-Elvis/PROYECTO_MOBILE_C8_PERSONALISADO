@@ -61,6 +61,7 @@ dependencies:
   hive_flutter: ^1.1.0
   flutter_paypal: ^0.2.1
   ui_helper: ^1.1.0
+  one_context: ^4.0.0
  
 dev_dependencies:
   flutter_test:

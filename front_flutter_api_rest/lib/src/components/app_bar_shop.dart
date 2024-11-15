@@ -51,7 +51,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CartScreen(),
+                            builder: (context) => CarritoPage(),
                           ),
                         );
                       },
@@ -82,7 +82,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CartScreen(),
+                          builder: (context) => CarritoPage(),
                         ),
                       );
                     },
