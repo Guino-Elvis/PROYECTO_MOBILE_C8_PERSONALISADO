@@ -1,29 +1,27 @@
 package com.example.ventas.service.impl;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.example.ventas.entity.Imagen;
 import com.example.ventas.entity.VoucherDetail;
 import com.example.ventas.entity.Voucher;
-import com.example.ventas.repository.ImagenRepository;
+
 import com.example.ventas.repository.VoucherDetailRepository;
 import com.example.ventas.service.VoucherDetailService;
 
 import jakarta.persistence.EntityNotFoundException;
 
+@Service
 public class VoucherDetailImpl implements VoucherDetailService {
 
-@Autowired
+    @Autowired
     private VoucherServiceImpl voucherService;
 
     @Autowired
     private VoucherDetailRepository voucherDetailRepository;
-
- 
 
     @Override
     public List<VoucherDetail> listar() {
@@ -62,7 +60,7 @@ public class VoucherDetailImpl implements VoucherDetailService {
                 voucherDetail.setVoucher(voucher);
             }
         }
-    
+
         return Optional.ofNullable(voucherDetail);
     }
 
@@ -76,5 +74,4 @@ public class VoucherDetailImpl implements VoucherDetailService {
         return voucherDetailRepository.findByVoucherId(idVoucher);
     }
 
-    
 }

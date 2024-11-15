@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
-import 'package:front_flutter_api_rest/src/services/carrito.dart';
+import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 import 'package:provider/provider.dart';
 
 class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
@@ -51,7 +51,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CarritoPage(),
+                            builder: (context) => CarritoPage(cliente: null),
                           ),
                         );
                       },
@@ -82,7 +82,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CarritoPage(),
+                          builder: (context) => CarritoPage(cliente: null),
                         ),
                       );
                     },

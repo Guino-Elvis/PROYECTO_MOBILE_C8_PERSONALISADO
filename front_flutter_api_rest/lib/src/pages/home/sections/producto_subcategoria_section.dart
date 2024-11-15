@@ -8,7 +8,7 @@ import 'package:front_flutter_api_rest/src/model/productoModel.dart';
 import 'package:front_flutter_api_rest/src/model/subCategoriaModel.dart';
 
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
-import 'package:front_flutter_api_rest/src/services/carrito.dart';
+import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 import 'package:provider/provider.dart';
 
 class ProductoSubCategoriaSection extends StatefulWidget {
@@ -167,7 +167,8 @@ class _ProductoSubCategoriaSectionState
                                     ),
                                   ),
                                   Text(
-                                    producto.precio ?? 'No hay nombre',
+                                    producto.precio?.toString() ??
+                                        'No hay precio',
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 14.5,
@@ -183,7 +184,8 @@ class _ProductoSubCategoriaSectionState
                                   ProductoCacheModel item = ProductoCacheModel(
                                     id: producto.id ?? 0,
                                     nombre: producto.nombre ?? 'No hay nombre',
-                                    precio: producto.precio ?? 'No hay precio',
+                                    precio: producto.precio?.toString() ??
+                                        'No hay precio',
                                     foto: producto.foto ?? 'No hay foto',
                                     cantidad: 1,
                                   );

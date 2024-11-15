@@ -127,7 +127,7 @@ class _ProductoSectionState extends State<ProductoSection> {
                           ),
                         ),
                         Text(
-                          producto.precio ?? 'No hay nombre',
+                          producto.precio?.toString() ?? 'No hay precio',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.5,

@@ -16,7 +16,7 @@ public class Voucher {
     private String tipo ;
     private String numero;
     private Date fecha;
-    private String total;
+    private Double total;
     private String status;
     private String metodo_pago;
 
@@ -37,5 +37,9 @@ public class Voucher {
     @PreUpdate
     private void preUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+    
+    public Voucher() {
+        this.total = (double) 0;
     }
 }

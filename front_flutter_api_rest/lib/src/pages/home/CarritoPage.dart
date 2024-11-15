@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
-import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
-import 'package:front_flutter_api_rest/src/pages/Payment/payment_page.dart';
-import 'package:front_flutter_api_rest/src/services/carrito.dart';
-import 'package:hive/hive.dart';
+import 'package:front_flutter_api_rest/src/pages/cliente_crud/cliente_create_page.dart';
+import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 
 class CarritoPage extends StatefulWidget {
+  final ClienteCacheModel? cliente;
+
+  CarritoPage({required this.cliente});
+
   @override
   _CarritoPageState createState() => _CarritoPageState();
 }
@@ -146,7 +149,7 @@ class _CarritoPageState extends State<CarritoPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PayPalButton(),
+                      builder: (context) => ClienteCreatePage(total: total),
                     ),
                   );
                 },

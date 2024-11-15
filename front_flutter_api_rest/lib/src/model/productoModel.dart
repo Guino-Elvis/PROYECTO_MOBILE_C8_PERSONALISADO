@@ -4,7 +4,7 @@ class ProductoModel {
   int? id;
   String? nombre;
   String? descrip;
-  String? precio;
+  double? precio;
   String? stock;
   String? foto;
   Map<String, dynamic>? subCategoria;
@@ -33,7 +33,7 @@ class ProductoModel {
       id: json['id'] as int?,
       nombre: json['nombre'] as String?,
       descrip: json['descrip'] as String?,
-      precio: json['precio'] as String?,
+      precio: json['precio'] as double?,
       stock: json['stock'] as String?,
       foto: json['foto'] as String?,
       subCategoria: json['subCategoria'] as Map<String, dynamic>?,

@@ -88,10 +88,11 @@ class _ProductoCreatePageState extends State<ProductoCreatePage> {
     if (_formKey.currentState!.validate()) {
       String? downloadUrl = await _uploadImage(_nombreController.text);
 
+      double? precio = double.tryParse(_precioController.text);
       final nuevoProducto = ProductoModel(
         nombre: _nombreController.text,
         descrip: _descripController.text,
-        precio: _precioController.text,
+        precio: precio,
         stock: _stockController.text,
         subCategoria: {'id': selectedSubCategoria},
         estado: selectedEstado ?? "",

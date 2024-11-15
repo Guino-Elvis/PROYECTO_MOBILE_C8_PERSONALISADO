@@ -175,15 +175,13 @@ class CartService extends ChangeNotifier {
     return []; // Retorna una lista vacía si la caja no está abierta
   }
 
-  // Método para limpiar el carrito
-  Future<void> clearCart() async {
-    if (_cartBox != null) {
-      _cartBox?.clear();
-      print('El carrito ha sido limpiado.');
-      _printCartContents(); // Imprimir el contenido después de limpiar el carrito
-      notifyListeners(); // Notifica a los listeners después de modificar el carrito
+  Future<void> limpiarCarrito() async {
+    final box = _cartBox; // Asumiendo que tienes una caja para el carrito
+    if (box != null) {
+      await box.clear(); // Elimina todos los elementos de la caja
+      print('Carrito limpiado');
     } else {
-      print('La caja no está abierta, no se pudo limpiar el carrito.');
+      print('No se pudo acceder al carrito para limpiarlo');
     }
   }
 }
