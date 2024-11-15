@@ -1,10 +1,9 @@
 package com.example.ventas.controller;
 
-import com.example.ventas.entity.Imagen;
+
 import com.example.ventas.entity.Producto;
 import com.example.ventas.service.ImagenService;
 import com.example.ventas.service.ProductoService;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
@@ -62,12 +61,6 @@ public class ProductoController {
         productoService.eliminarPorId(id);
         return "Eliminacion Correcta";
     }
-
-    // // imagen listar id
-    // @GetMapping("listar/imagen/{id}")
-    // public ResponseEntity<Imagen> listImagenById(@PathVariable(required = true) Integer id) {
-    //     return ResponseEntity.ok().body(imagenService.listarPorId(id).get());
-    // }
 
     // imagen eliminar
     @DeleteMapping("imagen/{id}")

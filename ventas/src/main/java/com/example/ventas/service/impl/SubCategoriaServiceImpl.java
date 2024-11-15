@@ -52,6 +52,7 @@ public class SubCategoriaServiceImpl implements SubCategoriaService {
         subCategoriaExistente.setNombre(subCategoria.getNombre());
         subCategoriaExistente.setTag(subCategoria.getTag());
         subCategoriaExistente.setFoto(subCategoria.getFoto());
+        subCategoriaExistente.setCategoria(subCategoria.getCategoria());
         subCategoriaExistente.setEstado(subCategoria.getEstado());
         // No toques createdAt
 

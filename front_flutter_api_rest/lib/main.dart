@@ -7,6 +7,7 @@ import 'package:front_flutter_api_rest/src/services/carrito.dart';
 import 'package:front_flutter_api_rest/src/services/firebase_service.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:one_context/one_context.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -80,15 +81,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return OneNotification(
+      builder: (_, __) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        initialRoute: '/',
+        routes: AppRoutes.getRoutes(),
+        navigatorKey: OneContext().key,
+        builder: OneContext().builder,
       ),
-      initialRoute: '/',
-      routes: AppRoutes.getRoutes(),
     );
   }
 }

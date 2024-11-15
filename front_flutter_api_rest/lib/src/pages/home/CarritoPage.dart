@@ -5,12 +5,12 @@ import 'package:front_flutter_api_rest/src/pages/Payment/payment_page.dart';
 import 'package:front_flutter_api_rest/src/services/carrito.dart';
 import 'package:hive/hive.dart';
 
-class CartScreen extends StatefulWidget {
+class CarritoPage extends StatefulWidget {
   @override
-  _CartScreenState createState() => _CartScreenState();
+  _CarritoPageState createState() => _CarritoPageState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _CarritoPageState extends State<CarritoPage> {
   final CartService cartService = CartService();
 
   Future<List<ProductoCacheModel>> getCartItems() async {

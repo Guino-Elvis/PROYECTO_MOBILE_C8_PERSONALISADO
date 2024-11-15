@@ -1,28 +1,27 @@
-// lib/utils/ui_helper.dart
-
 import 'package:flutter/material.dart';
+import 'package:one_context/one_context.dart';
 
 class UiHelper {
-  // Método estático para mostrar el diálogo de alerta
-  static void showAlertDialog(
-      BuildContext context, String message, String description,
-      {String title = 'Error'}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(description),
-          actions: <Widget>[
-            TextButton(
-              child: Text('OK'),
+  static ShowAlertDialog(String message,
+      {title = '', String? navigateTo, String? buttonTitle = ''}) {
+    OneContext().showDialog(builder: (ctx) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(2.0))),
+        actions: [
+          ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(ctx).pop();
+                if (navigateTo != null && navigateTo.isNotEmpty) {
+                  // Navega a la ruta especificada
+                  OneContext().pushNamed(navigateTo);
+                }
               },
-            ),
-          ],
-        );
-      },
-    );
+              child: Text(buttonTitle ?? 'no hay titulo para el boton'))
+        ],
+      );
+    });
   }
 }

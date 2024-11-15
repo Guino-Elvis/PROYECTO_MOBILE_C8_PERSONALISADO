@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_approval.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_error.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_success.dart';
 import 'package:front_flutter_api_rest/src/pages/categoria_crud/category_list_page.dart';
 import 'package:front_flutter_api_rest/src/pages/home/AdminHomePage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/Validator.dart';
 import 'package:front_flutter_api_rest/src/pages/home/UserHomePage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/loginPage.dart';
@@ -28,6 +30,8 @@ class AppRoutes {
   static const String paySuccessRoute = '/paymentSuccess';
   static const String payErrorRoute = '/paymentError';
   static const String approvalRoute = '/paymentApproval';
+  static const String carritoRoute = '/paymentCarrito';
+  static const String pasarelaRoute = '/paymentPasarela';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -44,6 +48,8 @@ class AppRoutes {
       paySuccessRoute: (context) => PaymentSuccessScreen(),
       payErrorRoute: (context) => PaymentErrorScreen(),
       approvalRoute: (context) => PaymentApprovalScreen(),
+      carritoRoute: (context) => CarritoPage(),
+      pasarelaRoute: (context) => PayPalButton(),
     };
   }
 }
