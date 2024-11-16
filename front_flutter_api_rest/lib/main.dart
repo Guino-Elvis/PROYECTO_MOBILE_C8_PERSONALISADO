@@ -61,7 +61,7 @@ Future<void> initializeHive() async {
   try {
     if (!Hive.isBoxOpen('clientecaja')) {
       print('Abriendo la caja "clientecaja"');
-      // await Hive.deleteBoxFromDisk('clientecaja');
+      //await Hive.deleteBoxFromDisk('clientecaja');
       await Hive.openBox<ClienteCacheModel>('clientecaja');
     } else {
       print('La caja "clientecaja" ya estaba abierta');

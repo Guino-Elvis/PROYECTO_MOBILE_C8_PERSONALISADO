@@ -8,6 +8,7 @@ import 'package:front_flutter_api_rest/src/routes/route.dart';
 import 'package:front_flutter_api_rest/src/services/api.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -177,24 +178,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   setState(() {
                     isAPIcallProcess = false;
                   });
-                  if (response.user != null) {
-                    FormHelper.showSimpleAlertDialog(
-                      context,
-                      ConfigApi.appName,
-                      "Te registraste correctamente. Ahora puedes logearte",
-                      "OK",
-                      () {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/login',
-                          (route) => false,
-                        );
-                      },
-                    );
+
+                  // Check if response is not null
+                  if (response != null) {
+                    if (response.user != null) {
+                      UiHelper.ShowAlertDialog(
+                        "Te registraste correctamente. Ahora puedes logearte", // Mensaje
+                        title: ConfigApi.appName, // Título del modal
+                        navigateTo:
+                            '/login', // Ruta a la que debe navegar después de cerrar el modal
+                        buttonTitle: 'OK', // Título del botón
+                      );
+                    } else {
+                      // If user is null, show the error message
+                      showErrorDialog(
+                          context, response.message ?? "Unknown error");
+                    }
                   } else {
-                    showErrorDialog(context, response.message);
+                    // Handle the case when response is null
+                    showErrorDialog(
+                        context, "No response received from the server.");
                   }
                 }).catchError((error) {
+                  // Handle unexpected errors that occur during the API call
                   showErrorDialog(context, error.toString());
                 });
               }
