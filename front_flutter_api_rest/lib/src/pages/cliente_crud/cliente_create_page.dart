@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
+import 'package:front_flutter_api_rest/src/components/checkout_progress.dart';
 import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
+import 'package:front_flutter_api_rest/src/controller/auth/ShareApiTokenController.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/cliente.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +20,12 @@ class ClienteCreatePage extends StatefulWidget {
 class _ClienteCreatePageState extends State<ClienteCreatePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  String accountName = "";
+  String accountEmail = "";
+  String accountApellidoP = "";
+  String accountApellidoM = "";
+  String accountDni = "";
+
   final _formKey = GlobalKey<FormState>(); // Clave para el formulario
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -26,31 +35,55 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
   final _tdocumentoController = TextEditingController();
   final _direccionController = TextEditingController();
   final _postalController = TextEditingController();
-  final _tdatosController = TextEditingController();
+
+  bool isChecked = false;
 
   ClienteService clienteService = ClienteService();
 
   @override
   void initState() {
     super.initState();
+    loadUserProfile();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
+  }
+
+  Future<void> loadUserProfile() async {
+    final loginDetails = await ShareApiTokenController.loginDetails();
+
+    if (loginDetails != null) {
+      setState(() {
+        accountName = loginDetails.user?.name ?? "";
+        accountEmail = loginDetails.user?.email ?? "";
+        accountApellidoP = loginDetails.user?.apellidoP ?? "";
+        accountApellidoM = loginDetails.user?.apellidoM ?? "";
+        accountDni = loginDetails.user?.apellidoM ?? "";
+
+        // Asignar los valores a los controladores
+        _nameController.text = accountName;
+        _emailController.text = accountEmail;
+        _paternoController.text = accountApellidoP;
+        _maternoController.text = accountApellidoM;
+        _tdocumentoController.text = accountDni;
+      });
+    }
   }
 
   void _crearCliente() async {
     if (_formKey.currentState!.validate()) {
-      // Obtener la caja de clientes
+      // Verificar que el checkbox de los términos y condiciones esté marcado
+      if (!isChecked) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Por favor, acepta los términos y condiciones')),
+        );
+        return; // Detener el flujo si no se acepta
+      }
       final box = clienteService.clienteCaja;
-
-      // Asegurarnos de que la caja esté abierta
       if (box != null) {
-        // Obtener las claves existentes en la caja
         final keys = box.keys.toList();
-
-        // Determinamos el siguiente id disponible (usando el índice más alto)
         int nextId = keys.isEmpty
-            ? 0 // Si la caja está vacía, el id inicial es 0
-            : (keys.cast<int>().reduce((a, b) => a > b ? a : b) +
-                1); // Obtener el id más alto y agregar 1
+            ? 0
+            : (keys.cast<int>().reduce((a, b) => a > b ? a : b) + 1);
 
         // Crear el nuevo cliente con el id calculado
         final nuevoCliente = ClienteCacheModel(
@@ -63,7 +96,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
           tdocumento: _tdocumentoController.text,
           direccion: _direccionController.text,
           postal: _postalController.text,
-          tdatos: _tdatosController.text,
+          tdatos: isChecked ? "1" : "0",
         );
 
         try {
@@ -112,86 +145,207 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
   Widget build(BuildContext context) {
     final themeProvider = context.watch<ThemeProvider>();
     final themeColors = themeProvider.getThemeColors();
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: themeProvider.isDiurno ? themeColors[1] : themeColors[7],
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            Card(
-              color: themeProvider.isDiurno ? themeColors[2] : themeColors[7],
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildTextField(_nameController, 'Nombre', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(_emailController, 'Email', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                          _phoneController, 'Teléfono', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(_paternoController, 'Apellido Paterno',
-                          themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(_maternoController, 'Apellido Materno',
-                          themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(_tdocumentoController,
-                          'Tipo de Documento', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                          _direccionController, 'Dirección', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                          _postalController, 'Código Postal', themeProvider),
-                      SizedBox(height: 20),
-                      _buildTextField(_tdatosController, 'Datos adicionales',
-                          themeProvider),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: _crearCliente,
-                        child: Text('Aceptar'),
+    return Stack(
+      children: [
+        Container(
+          color: Colors.blue.shade900,
+          height: 330,
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(
+                      CupertinoIcons.arrow_left,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        Positioned(
+          top: 100,
+          left: 15,
+          right: 15,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 25),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: true,
+                      textItem: '1',
+                    ),
+                    Text(
+                      '-----------',
+                      style: TextStyle(
+                        color: Colors.transparent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: false,
+                      textItem: '2',
+                    ),
+                    Text(
+                      '-----------',
+                      style: TextStyle(
+                        color: Colors.transparent,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: false,
+                      textItem: '3',
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(25),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  children: [
+                    SizedBox(height: 10),
+                    // Título centrado
+                    Text(
+                      'Datos del cliente',
+                      style: TextStyle(
+                        color: Colors.blue.shade900,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      height: 490,
+                      child: SingleChildScrollView(
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTextField(
+                                  _nameController, 'Nombre', themeProvider),
+                              _buildTextField(
+                                  _emailController, 'Email', themeProvider),
+                              _buildTextField(
+                                  _phoneController, 'Teléfono', themeProvider),
+                              _buildTextField(_paternoController,
+                                  'Apellido Paterno', themeProvider),
+                              _buildTextField(_maternoController,
+                                  'Apellido Materno', themeProvider),
+                              _buildTextField(_tdocumentoController,
+                                  'Tipo de Documento', themeProvider),
+                              _buildTextField(_direccionController, 'Dirección',
+                                  themeProvider),
+                              _buildTextField(_postalController,
+                                  'Código Postal', themeProvider),
+                              _termsConditionsCheckbox()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              InkWell(
+                onTap: _crearCliente,
+                child: Container(
+                  width: 230,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: Colors.blue.shade900,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                    child: Text(
+                      'Siguiente',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
   TextFormField _buildTextField(TextEditingController controller, String label,
       ThemeProvider themeProvider) {
-    final themeColors = themeProvider.getThemeColors();
     return TextFormField(
       controller: controller,
       style: TextStyle(
-        color: themeProvider.isDiurno ? themeColors[7] : themeColors[2],
+        fontSize: 14,
+        color: Colors.grey.shade700,
       ),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: TextStyle(
-          color: themeProvider.isDiurno ? themeColors[10] : themeColors[9],
+          fontSize: 12,
+          color: Colors.blue.shade900,
         ),
         filled: true,
-        fillColor: themeProvider.isDiurno ? themeColors[1] : themeColors[7],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: Colors.blue),
+        fillColor: Colors.white,
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.blue.shade900,
+            width: 2.0,
+          ),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.blue.shade900,
+            width: 2.0,
+          ),
         ),
       ),
       validator: (value) {
@@ -200,6 +354,32 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         }
         return null;
       },
+    );
+  }
+
+  Widget _termsConditionsCheckbox() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Checkbox(
+              value: isChecked,
+              onChanged: (bool? value) {
+                setState(() {
+                  isChecked = value!;
+                });
+              },
+            ),
+            Text(
+              'Acepto los términos y condiciones',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

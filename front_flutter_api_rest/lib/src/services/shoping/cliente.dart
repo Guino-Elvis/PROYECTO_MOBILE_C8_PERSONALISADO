@@ -45,7 +45,7 @@ class ClienteService extends ChangeNotifier {
         print('Contenido de la caja:');
         for (var item in clienteItems) {
           print(
-              ' Id: ${item.id}, Email: ${item.email}, Phone: ${item.phone}, paterno: ${item.paterno}, materno: ${item.materno}');
+              ' Id: ${item.id}, Email: ${item.email}, Phone: ${item.phone}, paterno: ${item.paterno}, materno: ${item.materno}, tdatos: ${item.tdatos}');
         }
       }
     } else {

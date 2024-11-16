@@ -1,6 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
 import 'package:front_flutter_api_rest/src/components/login_register_component.dart';
 import 'package:front_flutter_api_rest/src/controller/auth/login_register.dart';
 import 'package:front_flutter_api_rest/src/model/auth/AuthRequestModel.dart';
@@ -142,14 +143,11 @@ class _LoginPageState extends State<LoginPage> {
                             (route) => false,
                           );
                         } else {
-                          FormHelper.showSimpleAlertDialog(
-                            context,
-                            "Error",
+                          UiHelper.ShowAlertDialog(
                             "User or password is incorrect!",
-                            "OK",
-                            () {
-                              Navigator.pop(context);
-                            },
+                            title: "Error",
+                            buttonTitle: "OK",
+                            navigateTo: '',
                           );
                         }
                       });
