@@ -10,6 +10,8 @@ spring:
           uri: https://github.com/Guino-Elvis/PROYECTO_MOBILE_C8_PERSONALISADO.git
           search-paths: config-data
           default-label: main
+          username: Guino-Elvis # Tu usuario de GitHub
+          password: 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
   security:
     user:
       name: root
