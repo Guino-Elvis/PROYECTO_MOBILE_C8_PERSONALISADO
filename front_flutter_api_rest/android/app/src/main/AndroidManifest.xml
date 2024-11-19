@@ -7,9 +7,13 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     
     <application
+      
         android:label="front_flutter_api_rest"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <receiver
+        android:name=".MyBroadcastReceiver"
+        android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

@@ -3,6 +3,9 @@ package com.example.ventas.controller;
 import com.example.ventas.entity.Entrega;
 import com.example.ventas.service.EntregaService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
@@ -12,6 +15,10 @@ public class EntregaController {
      @Autowired
     private EntregaService entregaService;
 
+   @GetMapping()
+    public ResponseEntity<List<Entrega>> list() {
+        return ResponseEntity.ok().body(entregaService.listar());
+    }
 
     @PostMapping()
     public ResponseEntity<Entrega> save(@RequestBody Entrega entrega) {

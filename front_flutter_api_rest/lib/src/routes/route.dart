@@ -47,7 +47,7 @@ class AppRoutes {
       paySuccessRoute: (context) => PaymentSuccessScreen(),
       payErrorRoute: (context) => PaymentErrorScreen(),
       carritoRoute: (context) => CarritoPage(cliente: null),
-      pasarelaRoute: (context) => PayPalButton(cliente: null),
+      pasarelaRoute: (context) => PayPalButton(cliente: null, entrega: null),
     };
   }
 }

@@ -17,6 +17,7 @@ public class Entrega {
     private String distrito;
     private String referencia;
     
+    private Integer authUserId;
     @Transient
-    private AuthUser usuario;
+    private AuthUser authUser;
 }

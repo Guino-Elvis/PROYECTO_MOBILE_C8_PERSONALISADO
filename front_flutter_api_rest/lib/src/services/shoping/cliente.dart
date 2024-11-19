@@ -73,7 +73,8 @@ class ClienteService extends ChangeNotifier {
       if (box.containsKey(id)) {
         await box.put(id, clienteActualizado);
       }
-      print('Cliente actualizado: ${clienteActualizado.name}');
+      print(
+          'Cliente actualizado: ${clienteActualizado.name},${clienteActualizado.id}');
     } else {
       print('La caja no está abierta, no se pudo agregar el cliente.');
     }

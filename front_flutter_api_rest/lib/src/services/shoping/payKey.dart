@@ -6,4 +6,6 @@ class PaypalKey {
 
   static const String returnURL = "https://samplesite.com/return";
   static const String cancelURL = "https://samplesite.com/cancel";
+
+  static const String telefono = "51916882598";
 }

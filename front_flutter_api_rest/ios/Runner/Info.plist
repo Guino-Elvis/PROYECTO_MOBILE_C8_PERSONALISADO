@@ -4,14 +4,19 @@
 <dict>
 <key>CFBundleURLTypes</key>
     <!-- paypal -->
-<array>
-  <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>yourapp</string>  <!-- Reemplazar con tu esquema de URL -->
-    </array>
-  </dict>
-</array>
+	<array>
+	<dict>
+		<key>CFBundleURLSchemes</key>
+		<array>
+		<string>yourapp</string>  <!-- Reemplazar con tu esquema de URL -->
+		</array>
+	</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>https</string>
+	<string>http</string>
+	</array>
 	<!-- end paypal -->
     <!-- permisos necesarios para imagen -->
     <key>NSFileProviderDomainUsageDescription</key>
