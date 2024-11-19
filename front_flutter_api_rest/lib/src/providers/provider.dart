@@ -14,6 +14,7 @@ class Providers {
       'clienteListProvider': ConfigApi.buildUrl('/cliente'),
       'voucherListProvider': ConfigApi.buildUrl('/voucher'),
       'voucherDetailListProvider': ConfigApi.buildUrl('/voucher_detalle'),
+      'entregaListProvider': ConfigApi.buildUrl('/entrega'),
     };
   }
 }

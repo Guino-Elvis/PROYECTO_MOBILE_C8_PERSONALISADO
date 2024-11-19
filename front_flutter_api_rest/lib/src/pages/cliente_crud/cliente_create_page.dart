@@ -6,12 +6,14 @@ import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/components/checkout_progress.dart';
 import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
 import 'package:front_flutter_api_rest/src/controller/auth/ShareApiTokenController.dart';
+import 'package:front_flutter_api_rest/src/pages/entrega_crud/entrega_create_page.dart';
+import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/cliente.dart';
 import 'package:provider/provider.dart';
 
 class ClienteCreatePage extends StatefulWidget {
-  final double total;
+  final double? total;
   ClienteCreatePage({required this.total});
   @override
   _ClienteCreatePageState createState() => _ClienteCreatePageState();
@@ -19,6 +21,7 @@ class ClienteCreatePage extends StatefulWidget {
 
 class _ClienteCreatePageState extends State<ClienteCreatePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool _isLoading = false; // Para controlar el estado de carga
 
   String accountName = "";
   String accountEmail = "";
@@ -56,7 +59,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         accountEmail = loginDetails.user?.email ?? "";
         accountApellidoP = loginDetails.user?.apellidoP ?? "";
         accountApellidoM = loginDetails.user?.apellidoM ?? "";
-        accountDni = loginDetails.user?.apellidoM ?? "";
+        accountDni = loginDetails.user?.dni ?? "";
 
         // Asignar los valores a los controladores
         _nameController.text = accountName;
@@ -78,6 +81,11 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         );
         return; // Detener el flujo si no se acepta
       }
+      setState(() {
+        _isLoading =
+            true; // Hacer que el botón se deshabilite y mostrar el indicador de carga
+      });
+
       final box = clienteService.clienteCaja;
       if (box != null) {
         final keys = box.keys.toList();
@@ -112,12 +120,10 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Cliente creado con éxito')),
             );
-
-            // Navegar a la siguiente página (en este caso, el pago con PayPal)
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PayPalButton(
+                builder: (context) => EntregaCreatePage(
                   cliente: clienteRecuperado,
                   total: widget.total,
                 ),
@@ -138,6 +144,11 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
           SnackBar(content: Text('No se pudo acceder a la base de datos')),
         );
       }
+      // Una vez que el proceso termine, deshabilitar el indicador de carga
+      setState(() {
+        _isLoading =
+            false; // Rehabilitar el botón y ocultar el indicador de carga
+      });
     }
   }
 
@@ -159,7 +170,14 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
                 children: [
                   InkWell(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CarritoPage(
+                            cliente: null,
+                          ),
+                        ),
+                      );
                     },
                     child: Icon(
                       CupertinoIcons.arrow_left,
@@ -188,9 +206,9 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 25),
+                width: MediaQuery.of(context).size.width,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CheckoutProgress(
                       colorItem: Colors.blue.shade900,
@@ -198,7 +216,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
                       textItem: '1',
                     ),
                     Text(
-                      '-----------',
+                      '--------',
                       style: TextStyle(
                         color: Colors.transparent,
                         fontSize: 20,
@@ -211,7 +229,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
                       textItem: '2',
                     ),
                     Text(
-                      '-----------',
+                      '--------',
                       style: TextStyle(
                         color: Colors.transparent,
                         fontSize: 20,
@@ -227,90 +245,117 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
                 ),
               ),
               SizedBox(height: 30),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                margin: EdgeInsets.symmetric(horizontal: 20),
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    // Título centrado
-                    Text(
-                      'Datos del cliente',
-                      style: TextStyle(
-                        color: Colors.blue.shade900,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+              Column(
+                children: [
+                  Container(
+                    height: 560,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SafeArea(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              margin: EdgeInsets.symmetric(horizontal: 20),
+                              width: MediaQuery.of(context).size.width,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 10),
+                                  // Título centrado
+                                  Text(
+                                    'Datos del cliente',
+                                    style: TextStyle(
+                                      color: Colors.blue.shade900,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
 
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      height: 490,
-                      child: SingleChildScrollView(
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _buildTextField(
-                                  _nameController, 'Nombre', themeProvider),
-                              _buildTextField(
-                                  _emailController, 'Email', themeProvider),
-                              _buildTextField(
-                                  _phoneController, 'Teléfono', themeProvider),
-                              _buildTextField(_paternoController,
-                                  'Apellido Paterno', themeProvider),
-                              _buildTextField(_maternoController,
-                                  'Apellido Materno', themeProvider),
-                              _buildTextField(_tdocumentoController,
-                                  'Tipo de Documento', themeProvider),
-                              _buildTextField(_direccionController, 'Dirección',
-                                  themeProvider),
-                              _buildTextField(_postalController,
-                                  'Código Postal', themeProvider),
-                              _termsConditionsCheckbox()
-                            ],
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    height: 490,
+                                    child: SingleChildScrollView(
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            _buildTextField(_nameController,
+                                                'Nombre', themeProvider),
+                                            _buildTextField(_emailController,
+                                                'Email', themeProvider),
+                                            _buildTextField(_phoneController,
+                                                'Teléfono', themeProvider),
+                                            _buildTextField(
+                                                _paternoController,
+                                                'Apellido Paterno',
+                                                themeProvider),
+                                            _buildTextField(
+                                                _maternoController,
+                                                'Apellido Materno',
+                                                themeProvider),
+                                            _buildTextField(
+                                                _tdocumentoController,
+                                                'Tipo de Documento',
+                                                themeProvider),
+                                            _buildTextField(
+                                                _direccionController,
+                                                'Dirección',
+                                                themeProvider),
+                                            _buildTextField(_postalController,
+                                                'Código Postal', themeProvider),
+                                            _termsConditionsCheckbox()
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 30),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 30),
-                  ],
-                ),
-              ),
-              SizedBox(height: 30),
-              InkWell(
-                onTap: _crearCliente,
-                child: Container(
-                  width: 230,
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  decoration: BoxDecoration(
-                      color: Colors.blue.shade900,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Text(
-                      'Siguiente',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
+                          SizedBox(height: 30),
+                          InkWell(
+                            onTap: _isLoading ? null : _crearCliente,
+                            child: Container(
+                              width: 230,
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue.shade900,
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: _isLoading
+                                  ? CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : Center(
+                                      child: Text(
+                                        'Siguiente',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
@@ -359,11 +404,11 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
 
   Widget _termsConditionsCheckbox() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         SizedBox(height: 20),
         Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Checkbox(
               value: isChecked,
@@ -373,9 +418,12 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
                 });
               },
             ),
-            Text(
-              'Acepto los términos y condiciones',
-              style: TextStyle(fontSize: 16),
+            Container(
+              width: 150,
+              child: Text(
+                'Acepto los términos y condiciones',
+                style: TextStyle(fontSize: 14),
+              ),
             ),
           ],
         ),

@@ -18,8 +18,8 @@ class CheckoutProgress extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Container(
-          width: 45,
-          height: 45,
+          width: 35,
+          height: 35,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
             color: Colors.white,
@@ -29,7 +29,7 @@ class CheckoutProgress extends StatelessWidget {
               textItem,
               style: TextStyle(
                 color: colorItem,
-                fontSize: 20,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -38,7 +38,7 @@ class CheckoutProgress extends StatelessWidget {
         if (progress)
           CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(colorItem),
-            strokeWidth: 2,
+            strokeWidth: 6,
           ),
       ],
     );

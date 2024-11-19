@@ -1,27 +1,39 @@
 import 'dart:convert';
 import 'dart:ffi';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
+import 'package:front_flutter_api_rest/src/cache/EntregaCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
+import 'package:front_flutter_api_rest/src/components/checkout_progress.dart';
 import 'package:front_flutter_api_rest/src/controller/clienteController.dart';
+import 'package:front_flutter_api_rest/src/controller/entregaController.dart';
 import 'package:front_flutter_api_rest/src/controller/voucherController.dart';
 import 'package:front_flutter_api_rest/src/controller/voucherDetailController.dart';
 import 'package:front_flutter_api_rest/src/model/clienteModel.dart';
+import 'package:front_flutter_api_rest/src/model/entregaModel.dart';
 import 'package:front_flutter_api_rest/src/model/voucherDetailModel.dart';
 import 'package:front_flutter_api_rest/src/model/voucherModel.dart';
+import 'package:front_flutter_api_rest/src/pages/cliente_crud/cliente_editar_page.dart';
+import 'package:front_flutter_api_rest/src/pages/entrega_crud/entrega_create_page.dart';
+import 'package:front_flutter_api_rest/src/pages/entrega_crud/entrega_editar_page.dart';
 import 'package:front_flutter_api_rest/src/routes/route.dart';
+import 'package:front_flutter_api_rest/src/services/correo.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/cliente.dart';
+import 'package:front_flutter_api_rest/src/services/shoping/entrega.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/payKey.dart';
+import 'package:front_flutter_api_rest/src/services/whatsap.dart';
 import 'package:intl/intl.dart';
 
 class PayPalButton extends StatefulWidget {
   final ClienteCacheModel? cliente;
+  final EntregaCacheModel? entrega;
   final double? total;
 
-  PayPalButton({required this.cliente, this.total});
+  PayPalButton({required this.entrega, this.cliente, this.total});
 
   @override
   State<PayPalButton> createState() => _PayPalButtonState();
@@ -42,12 +54,53 @@ class _PayPalButtonState extends State<PayPalButton> {
 
   VoucherDetailController voucherDetailController = VoucherDetailController();
 
+  EntregaController entregaController = EntregaController();
+
   final CartService cartService = CartService();
 
   final ClienteService clienteService = ClienteService();
 
+  final EntregaService entregaService = EntregaService();
+
   Future<List<ProductoCacheModel>> getCartItems() async {
     return cartService.getCartItems();
+  }
+
+  // Función principal para manejar la creación secuencial
+  // Future<void> _enviarWapsap() async {
+  //   List<ProductoCacheModel> cartItems = cartService.getCartItems();
+  //   if (widget.cliente != null) {
+  //     Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => EnviarCorreoPage(
+  //           cliente: widget.cliente,
+  //           carrito: cartItems,
+  //           total: widget.total,
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     print('Error al crear el cliente');
+  //   }
+  // }
+
+  Future<void> _enviarWapsap() async {
+    List<ProductoCacheModel> cartItems = cartService.getCartItems();
+    if (widget.cliente != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EnviarWhatsAppPage(
+            cliente: widget.cliente,
+            carrito: cartItems,
+            total: widget.total,
+          ),
+        ),
+      );
+    } else {
+      print('Error al crear el cliente');
+    }
   }
 
   // Función principal para manejar la creación secuencial
@@ -61,6 +114,7 @@ class _PayPalButtonState extends State<PayPalButton> {
         // Si el voucher fue creado correctamente, se crean los voucher details
         await _crearVoucherDetail(voucherCreado);
 
+        await _crearEntrega();
         // Limpiar el carrito después de procesar el pago
         cartService.limpiarCarrito(); // Limpia el carrito al finalizar
         clienteService.limpiarCliente();
@@ -69,6 +123,33 @@ class _PayPalButtonState extends State<PayPalButton> {
       }
     } else {
       print('Error al crear el cliente');
+    }
+  }
+
+  Future<EntregaModel?> _crearEntrega() async {
+    final nuevaEntrega = EntregaModel(
+      departamento: widget.entrega?.departamento ?? 'no hay departamento',
+      provincia: widget.entrega?.provincia ?? 'no hay provincia',
+      distrito: widget.entrega?.distrito ?? 'no hay distrito',
+      referencia: widget.entrega?.referencia ?? 'no hay referencia',
+      authuserid: widget.entrega?.authUserId.toString(),
+    );
+
+    try {
+      final response = await entregaController.crearEntrega(nuevaEntrega);
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Entrega creado con éxito');
+        return EntregaModel.fromJson(json.decode(response.body));
+      } else {
+        print('Error al crear Entrega: ${response.body}');
+        return null; // Retornamos null si hubo un error
+      }
+    } catch (e) {
+      print('Error al crear Entrega: $e');
+      return null;
     }
   }
 
@@ -91,6 +172,9 @@ class _PayPalButtonState extends State<PayPalButton> {
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        final nuevaClienteCreado =
+            ClienteModel.fromJson(json.decode(response.body));
+
         print('Cliente creado con éxito');
         return ClienteModel.fromJson(json.decode(response.body));
       } else {
@@ -168,152 +252,575 @@ class _PayPalButtonState extends State<PayPalButton> {
     }
   }
 
-  Future<void> removeItem(int id) async {
-    await clienteService.eliminarCliente(id);
+  Future<void> removeItemAndNavigate(int clienteId, int entregaId) async {
+    try {
+      // Eliminar cliente
+      await clienteService.eliminarCliente(clienteId);
+      print("Cliente con id $clienteId eliminado");
+
+      // Eliminar entrega
+      await entregaService.eliminarEntrega(entregaId);
+      print("Entrega con id $entregaId eliminada");
+
+      // Navegar a la ruta del carrito
+      Navigator.pushNamed(context, AppRoutes.carritoRoute);
+
+      // Actualizar el estado después de eliminar ambos elementos
+      setState(() {
+        print("Cliente y entrega eliminados con éxito");
+      });
+    } catch (e) {
+      print("Error al eliminar los elementos: $e");
+    }
+  }
+
+  Future<void> removeEntrega(int id) async {
+    await entregaService.eliminarEntrega(id);
     print("Cliente con id $id eliminado");
-    Navigator.pushNamed(context, AppRoutes.carritoRoute);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EntregaCreatePage(
+          total: widget.total,
+          cliente: widget.cliente,
+        ),
+      ),
+    );
     setState(() {
       print("Cliente con id $id eliminado");
     });
   }
-
-  String totalAmount = '1.99';
-  String subTotalAmount = '1.99';
-  String shippingCost = '1.99';
-  String shippingDiscontCost = '1.99';
-
-  String userName = '1.99';
-  String userLastName = '1.99';
-  String addressCity = '1.99';
 
   @override
   Widget build(BuildContext context) {
     final cambio = '3.7'; // El valor como String
     final cambioDouble = double.parse(cambio);
     final totalUSD = widget.total != null ? widget.total! * cambioDouble : 0.0;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Pasarela de pago '),
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            Text(widget.cliente?.name ?? 'no hay cliente'),
-            Text(widget.cliente?.email ?? 'no hay cliente'),
-            Text(widget.cliente?.tdocumento ?? 'no hay cliente'),
-            Center(
-              child: Text('holaaa'),
-            ),
-            Center(
-              child: TextButton(
-                  onPressed: () => {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (BuildContext context) => UsePaypal(
-                              sandboxMode: true,
-                              clientId: clientId,
-                              secretKey: secret,
-                              returnURL: retorno,
-                              cancelURL: cancelar,
-                              transactions: const [
-                                {
-                                  "amount": {
-                                    "total": '10.12',
-                                    "currency": 'USD',
-                                    "details": {
-                                      "subtotal": '10.12',
-                                      "shipping": '0',
-                                      "shipping_discount": 0
-                                    }
-                                  },
-                                  "description":
-                                      "The payment transaction description.",
-                                  // "payment_options": {
-                                  //   "allowed_payment_method":
-                                  //       "INSTANT_FUNDING_SOURCE"
-                                  // },
-                                  "item_list": {
-                                    "items": [
-                                      {
-                                        "name": "A demo product",
-                                        "quantity": 1,
-                                        "price": '10.12',
-                                        "currency": "USD"
-                                      }
-                                    ],
-
-                                    // shipping address is not required though
-
-                                    "shipping_address": {
-                                      "recipient_name": "hola soy juan",
-                                      "line1": "Travis County",
-                                      "line2": "",
-                                      "city": "Austin",
-                                      "country_code": "US",
-                                      "postal_code": "73301",
-                                      "phone": "+00000000",
-                                      "state": "Texas"
-                                    },
-                                  }
-                                }
+    return Stack(
+      children: [
+        Container(
+          color: Colors.blue.shade900,
+          height: 330,
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      final entregaId = widget.entrega?.id;
+                      if (entregaId != null) {
+                        try {
+                          final idEntrega = int.parse(
+                              entregaId.toString()); // Convertir a int
+                          removeEntrega(idEntrega);
+                          // Aquí puedes agregar lógica adicional si deseas navegar o mostrar un mensaje.
+                        } catch (e) {
+                          print("Error al eliminar la entrega: $e");
+                        }
+                      } else {
+                        print('ID de la entrega no disponible');
+                      }
+                    },
+                    child: Icon(
+                      CupertinoIcons.arrow_left,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ),
+        Positioned(
+          top: 100,
+          left: 15,
+          right: 15,
+          child: Column(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: false,
+                      textItem: '1',
+                    ),
+                    Text(
+                      '--------',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: false,
+                      textItem: '2',
+                    ),
+                    Text(
+                      '--------',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    CheckoutProgress(
+                      colorItem: Colors.blue.shade900,
+                      progress: true,
+                      textItem: '3',
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Column(
+                children: [
+                  Container(
+                    height: 560,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
+                                ),
                               ],
-                              note:
-                                  "Contact us for any questions on your order.",
-                              onSuccess: (Map params) async {
-                                print("onSuccess: $params");
-                                await _procesarPago();
-                                UiHelper.ShowAlertDialog(
-                                  'El pago fue Exitoso. Felicidades',
-                                  title: 'Exitoso',
-                                  buttonTitle: 'Ir al inicio',
-                                  navigateTo: AppRoutes.paySuccessRoute,
-                                );
-                              },
-                              onError: (error) {
-                                print("onError: $error");
-                                UiHelper.ShowAlertDialog(
-                                  'Hubo un error con el pago. Inténtalo nuevamente.',
-                                  title: 'Error',
-                                  buttonTitle: 'Ok',
-                                  navigateTo: AppRoutes.pasarelaRoute,
-                                );
-                              },
-                              onCancel: (params) {
-                                print('cancelled: $params');
-                                UiHelper.ShowAlertDialog(
-                                  'El pago fue cancelado',
-                                  title: 'Cancelado',
-                                  buttonTitle: 'Ok',
-                                  navigateTo: AppRoutes.pasarelaRoute,
-                                );
-                              },
+                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                // Título centrado
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Datos del Cliente',
+                                        style: TextStyle(
+                                          color: Colors.blue.shade900,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ClienteEditarPage(
+                                                cliente: widget.cliente,
+                                                total: widget.total,
+                                                entrega: widget.entrega,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  height: 140,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _person(
+                                          widget.cliente!.email.toUpperCase(),
+                                          Icon(Icons.email),
+                                        ),
+                                        SizedBox(height: 15),
+                                        _person(
+                                          '${widget.cliente!.name.toUpperCase()} ${widget.cliente!.paterno.toUpperCase()} ${widget.cliente!.materno.toUpperCase()}',
+                                          Icon(Icons.email),
+                                        ),
+                                        SizedBox(height: 15),
+                                        _person(
+                                          widget.cliente!.phone.toUpperCase(),
+                                          Icon(Icons.phone),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 30),
+                              ],
                             ),
                           ),
-                        )
-                      },
-                  child: Column(
-                    children: [
-                      const Text("Pagar com paypal"),
-                      InkWell(
-                          onTap: () {
-                            final clienteId = widget.cliente?.id;
-                            if (clienteId != null) {
-                              try {
-                                final idCliente = int.parse(
-                                    clienteId.toString()); // Convertir a int
-                                removeItem(idCliente);
-                                // Aquí puedes agregar lógica adicional si deseas navegar o mostrar un mensaje.
-                              } catch (e) {
-                                print("Error al eliminar el cliente: $e");
-                              }
-                            } else {
-                              print('ID del cliente no disponible');
-                            }
-                          },
-                          child: Text('cancelar'))
-                    ],
-                  )),
+                          SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                // Título centrado
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 20),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Datos de Entrega',
+                                        style: TextStyle(
+                                          color: Colors.blue.shade900,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EntregaEditarPage(
+                                                cliente: widget.cliente,
+                                                total: widget.total,
+                                                entrega: widget.entrega,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.blue.shade900,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 15),
+                                  height: 100,
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        _person(
+                                          '${widget.entrega!.departamento} - ${widget.entrega!.provincia} - ${widget.entrega!.distrito}',
+                                          Icon(Icons.location_on),
+                                        ),
+                                        SizedBox(height: 15),
+                                        _person(
+                                          widget.entrega!.referencia,
+                                          Icon(Icons
+                                              .broadcast_on_personal_rounded),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 30),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 20),
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                // Título centrado
+                                Text(
+                                  'Metodos de Pago',
+                                  style: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 10),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            UsePaypal(
+                                          sandboxMode: true,
+                                          clientId: clientId,
+                                          secretKey: secret,
+                                          returnURL: retorno,
+                                          cancelURL: cancelar,
+                                          transactions: const [
+                                            {
+                                              "amount": {
+                                                "total": '10.12',
+                                                "currency": 'USD',
+                                                "details": {
+                                                  "subtotal": '10.12',
+                                                  "shipping": '0',
+                                                  "shipping_discount": 0
+                                                }
+                                              },
+                                              "description":
+                                                  "The payment transaction description.",
+                                              // "payment_options": {
+                                              //   "allowed_payment_method":
+                                              //       "INSTANT_FUNDING_SOURCE"
+                                              // },
+                                              "item_list": {
+                                                "items": [
+                                                  {
+                                                    "name": "A demo product",
+                                                    "quantity": 1,
+                                                    "price": '10.12',
+                                                    "currency": "USD"
+                                                  }
+                                                ],
+
+                                                // shipping address is not required though
+
+                                                "shipping_address": {
+                                                  "recipient_name":
+                                                      "hola soy juan",
+                                                  "line1": "Travis County",
+                                                  "line2": "",
+                                                  "city": "Austin",
+                                                  "country_code": "US",
+                                                  "postal_code": "73301",
+                                                  "phone": "+00000000",
+                                                  "state": "Texas"
+                                                },
+                                              }
+                                            }
+                                          ],
+                                          note:
+                                              "Contact us for any questions on your order.",
+                                          onSuccess: (Map params) async {
+                                            print("onSuccess: $params");
+                                            await _procesarPago();
+                                            UiHelper.ShowAlertDialog(
+                                              'El pago fue Exitoso. Felicidades',
+                                              title: 'Exitoso',
+                                              buttonTitle: 'Ir al inicio',
+                                              navigateTo:
+                                                  AppRoutes.paySuccessRoute,
+                                            );
+                                          },
+                                          onError: (error) {
+                                            print("onError: $error");
+                                            UiHelper.ShowAlertDialog(
+                                              'Hubo un error con el pago. Inténtalo nuevamente.',
+                                              title: 'Error',
+                                              buttonTitle: 'Ok',
+                                              navigateTo:
+                                                  AppRoutes.pasarelaRoute,
+                                            );
+                                          },
+                                          onCancel: (params) {
+                                            print('cancelled: $params');
+                                            UiHelper.ShowAlertDialog(
+                                              'El pago fue cancelado',
+                                              title: 'Cancelado',
+                                              buttonTitle: 'Ok',
+                                              navigateTo:
+                                                  AppRoutes.pasarelaRoute,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: _logos('assets/paypal.png',
+                                      Colors.blue, Colors.white),
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Cotisa tu carrito',
+                                  style: TextStyle(
+                                    color: Colors.blue.shade900,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 10),
+                                InkWell(
+                                  onTap: () {
+                                    _enviarWapsap();
+                                  },
+                                  child: _logos('assets/whatsapp.png',
+                                      Colors.green, Colors.white),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('Confirmar cancelación'),
+                                          content: Text(
+                                              '¿Está seguro de cancelar su compra?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(); // Cierra el diálogo
+                                              },
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                int clienteId =
+                                                    widget.cliente?.id ?? 0;
+                                                int entregaId =
+                                                    widget.entrega?.id ?? 0;
+
+                                                removeItemAndNavigate(
+                                                    clienteId, entregaId);
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('Sí'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Text(
+                                    'Recuerde que puede cancelar su compra en cualquier momento.',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                SizedBox(height: 30),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 40),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _logos(String link, Color colorItem, Color color2) {
+    return Container(
+      width: 200,
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 2),
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: colorItem, // Color del borde
+          width: 2.0, // Grosor del borde
+        ),
+        color: color2,
+        borderRadius: BorderRadius.circular(8.0), // Bordes redondeados
+      ),
+      child: Image.asset(
+        link, // Ruta de la imagen
+        width: 100, // Ajusta el ancho según sea necesario
+        height: 50, // Ajusta la altura según sea necesario
+        fit: BoxFit.contain, // Ajusta cómo se adapta la imagen
+      ),
+    );
+  }
+
+  Widget _person(String itemtext, Icon itemIcon) {
+    return Container(
+      alignment: AlignmentDirectional.topStart,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        reverse: true,
+        child: Row(
+          children: [
+            Icon(
+              itemIcon.icon, // Corregimos el uso del parámetro icon
+              color: Colors.blue.shade600, // Usamos el color del ícono
+              size: 30, // Usamos el tamaño del ícono
             ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              itemtext,
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            )
           ],
         ),
       ),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
+import 'package:front_flutter_api_rest/src/components/app_bar_create.dart';
 import 'package:front_flutter_api_rest/src/pages/cliente_crud/cliente_create_page.dart';
+import 'package:front_flutter_api_rest/src/pages/home/UserHomePage.dart';
+import 'package:front_flutter_api_rest/src/routes/route.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 
 class CarritoPage extends StatefulWidget {
@@ -15,7 +18,7 @@ class CarritoPage extends StatefulWidget {
 
 class _CarritoPageState extends State<CarritoPage> {
   final CartService cartService = CartService();
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future<List<ProductoCacheModel>> getCartItems() async {
     return cartService.getCartItems();
   }
@@ -51,86 +54,89 @@ class _CarritoPageState extends State<CarritoPage> {
     int cartCount = cartService.getCartCount();
     String cartCountStr = cartCount.toString();
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Carrito de Compras"),
-        backgroundColor: Colors.blue,
-      ),
-      body: FutureBuilder<List<ProductoCacheModel>>(
-        future: getCartItems(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error al cargar el carrito'));
-          } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-            return Center(child: Text('Tu carrito está vacío.'));
-          } else if (snapshot.hasData) {
-            List<ProductoCacheModel> cartItems = snapshot.data!;
-            return ListView.builder(
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                ProductoCacheModel product = cartItems[index];
-                return Card(
-                  margin: EdgeInsets.all(10),
-                  elevation: 5,
-                  child: ListTile(
-                    leading: Image.network(
-                      product.foto,
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                    ),
-                    title: Text(product.nombre),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Precio: \$${product.precio}'),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(color: Colors.grey),
+      key: _scaffoldKey,
+      body: Column(
+        children: [
+          AppBarCreate(
+            onBackTap: () {
+              Navigator.pushNamed(context, AppRoutes.userhomeRoute);
+            },
+          ),
+          Expanded(
+            child: FutureBuilder<List<ProductoCacheModel>>(
+              future: getCartItems(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error al cargar el carrito'));
+                } else if (snapshot.hasData && snapshot.data!.isEmpty) {
+                  return Center(child: Text('Tu carrito está vacío.'));
+                } else if (snapshot.hasData) {
+                  List<ProductoCacheModel> cartItems = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: cartItems.length,
+                    itemBuilder: (context, index) {
+                      ProductoCacheModel product = cartItems[index];
+                      return Card(
+                        margin: EdgeInsets.all(10),
+                        elevation: 5,
+                        child: ListTile(
+                          leading: Image.network(
+                            product.foto,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          title: Text(product.nombre),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.remove),
-                                    onPressed: () {
-                                      if (product.cantidad > 1) {
+                              Text('Precio: \$${product.precio}'),
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(100),
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.remove),
+                                      onPressed: () {
+                                        if (product.cantidad > 1) {
+                                          updateQuantity(
+                                              index, product.cantidad - 1);
+                                        }
+                                      },
+                                    ),
+                                    Text('${product.cantidad}'),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
                                         updateQuantity(
-                                            index, product.cantidad - 1);
-                                      }
-                                    },
-                                  ),
-                                  Text('${product.cantidad}'),
-                                  IconButton(
-                                    icon: Icon(Icons.add),
-                                    onPressed: () {
-                                      updateQuantity(
-                                          index, product.cantidad + 1);
-                                    },
-                                  ),
-                                ],
+                                            index, product.cantidad + 1);
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete),
+                            onPressed: () => removeItem(index),
+                          ),
                         ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () => removeItem(index),
-                    ),
-                  ),
-                );
+                      );
+                    },
+                  );
+                }
+                return Center(child: Text('No hay productos en el carrito'));
               },
-            );
-          }
-          return Center(child: Text('No hay productos en el carrito'));
-        },
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: FutureBuilder<List<ProductoCacheModel>>(
         future: getCartItems(),
