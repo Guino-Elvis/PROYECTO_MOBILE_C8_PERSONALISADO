@@ -44,14 +44,14 @@ class LoginRegisterComponent extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 50),
+                      SizedBox(height: 45),
                       Container(
                         alignment: AlignmentDirectional.bottomEnd,
                         child: Text(
-                          'FRANCHESCAS',
+                          'ROPA & GLAMOUR',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 25,
+                            fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

@@ -63,7 +63,8 @@ class _SubCategoriSectionState extends State<SubCategoriSection> {
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               decoration: BoxDecoration(
-                color: themeProvider.isDiurno ? themeColors[2] : themeColors[0],
+                color:
+                    themeProvider.isDiurno ? themeColors[11] : themeColors[12],
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -87,7 +88,9 @@ class _SubCategoriSectionState extends State<SubCategoriSection> {
                           180, // Rota 90 grados hacia la derecha
                       child: Icon(
                         Icons.local_offer,
-                        color: Colors.white,
+                        color: themeProvider.isDiurno
+                            ? themeColors[7]
+                            : themeColors[6],
                         size: 20,
                       ),
                     ),
@@ -95,8 +98,11 @@ class _SubCategoriSectionState extends State<SubCategoriSection> {
                     Text(
                       subcategoria.nombre ?? 'No hay subcategoria',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: themeProvider.isDiurno
+                            ? themeColors[7]
+                            : themeColors[6],
                         fontSize: 14.5,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ],

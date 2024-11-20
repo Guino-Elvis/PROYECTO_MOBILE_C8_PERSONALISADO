@@ -53,6 +53,7 @@ class _ClienteEditarPageState extends State<ClienteEditarPage> {
       final int? clienteId = widget.cliente?.id;
       final editarCliente = ClienteCacheModel(
         id: clienteId,
+        userId: widget.cliente?.userId,
         email: _emailController.text,
         phone: _phoneController.text,
         name: _nameController.text,

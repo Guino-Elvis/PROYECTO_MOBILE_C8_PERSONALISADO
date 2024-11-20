@@ -28,6 +28,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
   String accountApellidoP = "";
   String accountApellidoM = "";
   String accountDni = "";
+  String? accountId;
 
   final _formKey = GlobalKey<FormState>(); // Clave para el formulario
   final _nameController = TextEditingController();
@@ -61,6 +62,8 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         accountApellidoM = loginDetails.user?.apellidoM ?? "";
         accountDni = loginDetails.user?.dni ?? "";
 
+        accountId = loginDetails.user?.id?.toString();
+
         // Asignar los valores a los controladores
         _nameController.text = accountName;
         _emailController.text = accountEmail;
@@ -92,10 +95,11 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
         int nextId = keys.isEmpty
             ? 0
             : (keys.cast<int>().reduce((a, b) => a > b ? a : b) + 1);
-
+        final accountIdInt = int.tryParse(accountId ?? "");
         // Crear el nuevo cliente con el id calculado
         final nuevoCliente = ClienteCacheModel(
           id: nextId, // Asignamos el id calculado
+          userId: accountIdInt,
           email: _emailController.text,
           phone: _phoneController.text,
           name: _nameController.text,
@@ -248,7 +252,7 @@ class _ClienteCreatePageState extends State<ClienteCreatePage> {
               Column(
                 children: [
                   Container(
-                    height: 560,
+                    height: 800,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [

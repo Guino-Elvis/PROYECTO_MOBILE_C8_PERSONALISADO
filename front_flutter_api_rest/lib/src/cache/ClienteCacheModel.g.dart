@@ -27,13 +27,14 @@ class ClienteCacheModelAdapter extends TypeAdapter<ClienteCacheModel> {
       direccion: fields[7] as String,
       postal: fields[8] as String,
       tdatos: fields[9] as String,
+      userId: fields[10] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ClienteCacheModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class ClienteCacheModelAdapter extends TypeAdapter<ClienteCacheModel> {
       ..writeByte(8)
       ..write(obj.postal)
       ..writeByte(9)
-      ..write(obj.tdatos);
+      ..write(obj.tdatos)
+      ..writeByte(10)
+      ..write(obj.userId);
   }
 
   @override

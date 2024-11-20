@@ -1,5 +1,6 @@
 class ClienteModel {
   int? id;
+  int? userId;
   String? email;
   String? phone;
   String? name;
@@ -14,6 +15,7 @@ class ClienteModel {
   // Constructor
   ClienteModel({
     this.id,
+    this.userId,
     this.email,
     this.phone,
     this.name,
@@ -31,6 +33,7 @@ class ClienteModel {
   factory ClienteModel.fromJson(Map<String, dynamic> json) {
     return ClienteModel(
       id: json['id'] as int?,
+      userId: json['userId'] as int?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
       name: json['name'] as String?,
@@ -49,6 +52,7 @@ class ClienteModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'email': email,
       'phone': phone,
       'name': name,

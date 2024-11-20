@@ -7,6 +7,7 @@ import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/EntregaCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
+import 'package:front_flutter_api_rest/src/components/UiHelperShop.dart';
 import 'package:front_flutter_api_rest/src/components/checkout_progress.dart';
 import 'package:front_flutter_api_rest/src/controller/clienteController.dart';
 import 'package:front_flutter_api_rest/src/controller/entregaController.dart';
@@ -155,6 +156,7 @@ class _PayPalButtonState extends State<PayPalButton> {
 
   Future<ClienteModel?> _crearCliente() async {
     final nuevoCliente = ClienteModel(
+      userId: widget.cliente?.userId,
       email: widget.cliente?.email ?? 'no hay email',
       phone: widget.cliente?.phone ?? 'no hay phone',
       name: widget.cliente?.name ?? 'no hay name',
@@ -191,9 +193,28 @@ class _PayPalButtonState extends State<PayPalButton> {
     String fechaHoyString = DateFormat('yyyy-MM-dd').format(DateTime.now());
     DateTime fechaHoy = DateTime.parse(fechaHoyString);
 
+    // Obtener todos los vouchers, mapeándolos a VoucherModel
+    final vouchers = await voucherController.getDataVoucher();
+
+    // Asegurarse de que los vouchers se convierten en objetos VoucherModel
+    final voucherModels =
+        vouchers.map((json) => VoucherModel.fromJson(json)).toList();
+
+    String numero;
+    if (voucherModels.isEmpty) {
+      numero = 'VC000001';
+    } else {
+      final ultimoVoucher = voucherModels.last;
+      String ultimoNumero = ultimoVoucher.numero ?? 'VC000000';
+      int numeroParteNumerica = int.parse(ultimoNumero.substring(2));
+      numeroParteNumerica++;
+      numero = 'VC' + numeroParteNumerica.toString().padLeft(6, '0');
+    }
+
+    // Crear un nuevo voucher
     final nuevoVoucher = VoucherModel(
       tipo: 'TICKET DE COMPRA',
-      numero: 'T000001',
+      numero: numero,
       fecha: fechaHoy,
       total: widget.total,
       status: 'PA',
@@ -204,19 +225,24 @@ class _PayPalButtonState extends State<PayPalButton> {
     );
 
     try {
+      // Enviar la solicitud para crear el voucher
       final response = await voucherController.crearVourcher(nuevoVoucher);
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        // Si la respuesta es exitosa, devolver el voucher creado
         print('Voucher creado con éxito');
         return VoucherModel.fromJson(json.decode(response.body));
       } else {
+        // Si hay un error al crear el voucher, mostrar el error
         print('Error al crear el voucher: ${response.body}');
-        return null; // Retornamos null si hubo un error
+        return null; // Retornar null si hubo un error
       }
-    } catch (e) {
+    } catch (e, stacktrace) {
+      // Capturar cualquier error y mostrarlo
       print('Error al crear el voucher: $e');
+      print('Stacktrace: $stacktrace');
       return null;
     }
   }
@@ -225,11 +251,17 @@ class _PayPalButtonState extends State<PayPalButton> {
     List<ProductoCacheModel> cartItems = await getCartItems();
 
     for (var product in cartItems) {
+      double cantidad = double.tryParse(product.cantidad.toString()) ?? 0.0;
+      double precio = double.tryParse(product.precio.toString()) ?? 0.0;
+
+      double importe = cantidad * precio;
+      String importeStr = importe.toStringAsFixed(2);
+
       final nuevoVoucherDetail = VoucherDetailModel(
         cantidad: product.cantidad.toString(),
         descripcion: product.nombre,
         punitario: product.precio,
-        importe: product.precio * product.cantidad,
+        importe: importeStr,
         voucher: {
           'id': voucherCreado.id.toString(),
         },
@@ -394,7 +426,7 @@ class _PayPalButtonState extends State<PayPalButton> {
               Column(
                 children: [
                   Container(
-                    height: 560,
+                    height: 800,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
@@ -660,30 +692,29 @@ class _PayPalButtonState extends State<PayPalButton> {
                                           onSuccess: (Map params) async {
                                             print("onSuccess: $params");
                                             await _procesarPago();
-                                            UiHelper.ShowAlertDialog(
-                                              'El pago fue Exitoso. Felicidades',
-                                              title: 'Exitoso',
-                                              buttonTitle: 'Ir al inicio',
+                                            UiHelperShop.ShowAlertDialog(
+                                              context,
+                                              message:
+                                                  'El pago fue Exitoso. Felicidades',
                                               navigateTo:
-                                                  AppRoutes.paySuccessRoute,
+                                                  AppRoutes.userhomeRoute,
                                             );
                                           },
                                           onError: (error) {
                                             print("onError: $error");
-                                            UiHelper.ShowAlertDialog(
-                                              'Hubo un error con el pago. Inténtalo nuevamente.',
-                                              title: 'Error',
-                                              buttonTitle: 'Ok',
+                                            UiHelperShop.ShowAlertDialog(
+                                              context,
+                                              message:
+                                                  'Hubo un error con el pago. Inténtalo nuevamente.',
                                               navigateTo:
                                                   AppRoutes.pasarelaRoute,
                                             );
                                           },
                                           onCancel: (params) {
                                             print('cancelled: $params');
-                                            UiHelper.ShowAlertDialog(
-                                              'El pago fue cancelado',
-                                              title: 'Cancelado',
-                                              buttonTitle: 'Ok',
+                                            UiHelperShop.ShowAlertDialog(
+                                              context,
+                                              message: 'El pago fue cancelado',
                                               navigateTo:
                                                   AppRoutes.pasarelaRoute,
                                             );

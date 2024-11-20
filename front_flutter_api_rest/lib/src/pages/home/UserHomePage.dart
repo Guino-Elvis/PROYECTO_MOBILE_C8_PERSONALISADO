@@ -37,10 +37,10 @@ class _UserHomePageState extends State<UserHomePage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBarShow(
-        appBarColor: themeProvider.isDiurno ? themeColors[2] : themeColors[0],
+        appBarColor: themeProvider.isDiurno ? themeColors[6] : themeColors[7],
       ),
       drawer: NavigationDrawerWidget(),
-      backgroundColor: Colors.white,
+      backgroundColor: themeProvider.isDiurno ? themeColors[6] : themeColors[7],
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -61,6 +61,8 @@ class _UserHomePageState extends State<UserHomePage> {
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
+                  color:
+                      themeProvider.isDiurno ? themeColors[7] : themeColors[6],
                 ),
               ),
             ),
@@ -69,9 +71,7 @@ class _UserHomePageState extends State<UserHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavBarFlex(
-        buttonColor: Colors.red,
-      ),
+      bottomNavigationBar: BottomNavBarFlex(),
     );
   }
 }

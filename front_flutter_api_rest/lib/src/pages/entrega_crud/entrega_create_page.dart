@@ -222,7 +222,7 @@ class _EntregaCreatePageState extends State<EntregaCreatePage> {
               Column(
                 children: [
                   Container(
-                    height: 560,
+                    height: 700,
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
