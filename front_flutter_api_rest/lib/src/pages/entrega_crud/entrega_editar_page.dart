@@ -153,7 +153,7 @@ class _EntregaEditarPageState extends State<EntregaEditarPage> {
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      height: 200,
+                      height: 300,
                       child: SingleChildScrollView(
                         child: Form(
                           child: Column(

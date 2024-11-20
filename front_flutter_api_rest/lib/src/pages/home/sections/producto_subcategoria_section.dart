@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/controller/productoController.dart';
 import 'package:front_flutter_api_rest/src/controller/sub_categoriaController.dart';
@@ -92,13 +94,18 @@ class _ProductoSubCategoriaSectionState
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
+                        color: themeProvider.isDiurno
+                            ? themeColors[7]
+                            : themeColors[6],
                       ),
                     ),
                     Text(
                       'ver mas',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
+                        fontWeight: FontWeight.w900,
+                        color: themeProvider.isDiurno
+                            ? themeColors[0]
+                            : themeColors[0],
                       ),
                     ),
                   ],
@@ -109,13 +116,15 @@ class _ProductoSubCategoriaSectionState
                 child: Row(
                   children: productosSubCategoria.map<Widget>((producto) {
                     return Container(
-                      height: 300,
+                      height: 310,
                       margin:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: themeProvider.isDiurno
+                            ? themeColors[11]
+                            : themeColors[7],
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
@@ -150,6 +159,9 @@ class _ProductoSubCategoriaSectionState
                                     (producto.nombre ?? 'No hay nombre')
                                         .toUpperCase(),
                                     style: TextStyle(
+                                      color: themeProvider.isDiurno
+                                          ? themeColors[7]
+                                          : themeColors[6],
                                       fontSize: 14.5,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -161,7 +173,9 @@ class _ProductoSubCategoriaSectionState
                                           producto.descrip ?? 'No hay nombre',
                                           32),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: themeProvider.isDiurno
+                                            ? themeColors[7]
+                                            : themeColors[6],
                                         fontSize: 14.5,
                                       ),
                                     ),
@@ -170,7 +184,9 @@ class _ProductoSubCategoriaSectionState
                                     producto.precio?.toString() ??
                                         'No hay precio',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: themeProvider.isDiurno
+                                          ? themeColors[7]
+                                          : themeColors[6],
                                       fontSize: 14.5,
                                     ),
                                   ),
@@ -192,27 +208,18 @@ class _ProductoSubCategoriaSectionState
                                   cartService.addToCart(item);
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 50, vertical: 2),
-                                  color: Colors.blue,
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.shopping_cart,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        'Añadir',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 14.5,
-                                        ),
-                                      ),
-                                    ],
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: themeProvider.isDiurno
+                                        ? themeColors[0]
+                                        : themeColors[0],
+                                  ),
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.shopping_bag_outlined,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ),

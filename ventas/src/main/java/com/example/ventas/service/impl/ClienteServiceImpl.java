@@ -40,6 +40,7 @@ public class ClienteServiceImpl implements ClienteService {
                 .orElseThrow(() -> new EntityNotFoundException("cliente no encontrada"));
 
         clienteExistente.setEmail(cliente.getEmail());
+        clienteExistente.setUserId(cliente.getUserId());
         clienteExistente.setPhone(cliente.getPhone());
         clienteExistente.setName(cliente.getName());
         clienteExistente.setPaterno(cliente.getPaterno());

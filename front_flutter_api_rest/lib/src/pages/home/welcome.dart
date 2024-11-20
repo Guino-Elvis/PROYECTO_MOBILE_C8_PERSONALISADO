@@ -54,7 +54,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   Center(
                     child: Text(
-                      'FRANCHESCAS',
+                      'ROPA & GLAMOUR',
                       style: GoogleFonts.oswald(
                         textStyle: TextStyle(
                           fontSize: 55,
@@ -71,7 +71,7 @@ class _WelcomePageState extends State<WelcomePage> {
                     child: DefaultTextStyle(
                       style: GoogleFonts.dancingScript(
                         textStyle: TextStyle(
-                          fontSize: 40,
+                          fontSize: 35,
                           color: Colors.white, // Azul más brillante
                           letterSpacing:
                               2.0, // Espaciado entre letras (ajusta a tu gusto)
@@ -80,7 +80,7 @@ class _WelcomePageState extends State<WelcomePage> {
                       child: AnimatedTextKit(
                         animatedTexts: [
                           TyperAnimatedText(
-                            'Pontelo tu',
+                            'Tu moda, tu esencia.',
                             speed: Duration(milliseconds: 200),
                           ),
                         ],

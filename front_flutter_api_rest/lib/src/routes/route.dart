@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/controller/Payment/PayPalPayment.dart';
 import 'package:front_flutter_api_rest/src/pages/Payment/payment_error.dart';
-import 'package:front_flutter_api_rest/src/pages/Payment/payment_success.dart';
 import 'package:front_flutter_api_rest/src/pages/categoria_crud/category_list_page.dart';
 import 'package:front_flutter_api_rest/src/pages/home/AdminHomePage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/CategoriaPage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/PedidosPage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/Validator.dart';
 import 'package:front_flutter_api_rest/src/pages/home/UserHomePage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/loginPage.dart';
@@ -31,6 +32,8 @@ class AppRoutes {
   static const String approvalRoute = '/paymentApproval';
   static const String carritoRoute = '/paymentCarrito';
   static const String pasarelaRoute = '/paymentPasarela';
+  static const String categoriaRoute = '/categoria_page';
+  static const String pedidosRoute = '/pedidos_page';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -44,9 +47,11 @@ class AppRoutes {
       subcategoriaListRoute: (context) => SubCategorialistPage(),
       productoListRoute: (context) => ProductolistPage(),
       usuarioListRoute: (context) => UsuariolistPage(),
-      paySuccessRoute: (context) => PaymentSuccessScreen(),
+      //paySuccessRoute: (context) => PaymentSuccessScreen(),
       payErrorRoute: (context) => PaymentErrorScreen(),
       carritoRoute: (context) => CarritoPage(cliente: null),
+      categoriaRoute: (context) => CategoriaPage(),
+      pedidosRoute: (context) => PedidosPage(),
       pasarelaRoute: (context) => PayPalButton(cliente: null, entrega: null),
     };
   }

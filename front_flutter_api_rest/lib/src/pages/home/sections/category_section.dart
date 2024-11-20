@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/controller/categoriaController.dart';
 import 'package:front_flutter_api_rest/src/model/categoriaModel.dart';
+import 'package:front_flutter_api_rest/src/pages/home/CategoriaPageDetail.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +61,8 @@ class _CategoriSectionState extends State<CategoriSection> {
               margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               decoration: BoxDecoration(
-                color: themeProvider.isDiurno ? themeColors[2] : themeColors[0],
+                color:
+                    themeProvider.isDiurno ? themeColors[11] : themeColors[12],
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -73,7 +75,13 @@ class _CategoriSectionState extends State<CategoriSection> {
               ),
               child: InkWell(
                 onTap: () {
-                  // _navigateToCategoryView(categoria.id);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          CategoriaPageDetail(categoria: categoria),
+                    ),
+                  );
                 },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,7 +92,9 @@ class _CategoriSectionState extends State<CategoriSection> {
                           180, // Rota 90 grados hacia la derecha
                       child: Icon(
                         Icons.local_offer,
-                        color: Colors.white,
+                        color: themeProvider.isDiurno
+                            ? themeColors[7]
+                            : themeColors[6],
                         size: 20,
                       ),
                     ),
@@ -92,8 +102,11 @@ class _CategoriSectionState extends State<CategoriSection> {
                     Text(
                       categoria.nombre ?? 'No hay categoría',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: themeProvider.isDiurno
+                            ? themeColors[7]
+                            : themeColors[6],
                         fontSize: 14.5,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                   ],

@@ -1,110 +1,71 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:front_flutter_api_rest/src/routes/route.dart';
-import 'package:snippet_coder_utils/hex_color.dart';
+import 'package:front_flutter_api_rest/src/providers/theme.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavBarFlex extends StatelessWidget {
-  final dynamic buttonColor; // Propiedad para el color del botón
-
-  BottomNavBarFlex({
-    required this.buttonColor,
-  });
-
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final themeColors = themeProvider.getThemeColors();
     return SafeArea(
-      child: BottomAppBar(
-        color: Colors.white,
-        height: 90.0,
-        shape: const CircularNotchedRectangle(),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
+      child: Container(
+        height: 120,
+        child: BottomAppBar(
+          color: Colors.transparent,
+          shape: const CircularNotchedRectangle(),
+          child: Container(
+            margin: EdgeInsets.only(bottom: 30),
+            decoration: BoxDecoration(
+                color: themeProvider.isDiurno ? themeColors[0] : themeColors[0],
+                borderRadius: BorderRadius.circular(100)),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.userhomeRoute);
-                  },
-                  icon: const Icon(
-                    Icons.storefront,
-                    size: 30,
-                  ),
-                  color: Colors.blue.shade800,
+                _navBarItem(
+                  context,
+                  icon: Icons.storefront,
+                  routeName: '/user_home',
                 ),
-                const Text(
-                  'Tienda',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 33, 82, 243),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
+                _navBarItem(
+                  context,
+                  icon: CupertinoIcons.rectangle_grid_2x2,
+                  routeName: '/categoria_page',
+                ),
+                _navBarItem(
+                  context,
+                  icon: Icons.shopping_bag_outlined,
+                  routeName: '/pedidos_page',
+                ),
+                _navBarItem(
+                  context,
+                  icon: Icons.headset_mic_outlined,
+                  routeName: null,
                 ),
               ],
             ),
-            Column(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    CupertinoIcons.rectangle_grid_2x2,
-                    size: 30,
-                  ),
-                  color: Colors.blue.shade800,
-                ),
-                const Text(
-                  'Categorias',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 33, 82, 243),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.shopping_bag_outlined,
-                    size: 30,
-                  ),
-                  color: Colors.blue.shade800,
-                ),
-                const Text(
-                  'Mis pedidos',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 33, 82, 243),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    //  Navigator.pushNamed(context, AppRoutes.adminhomeRoute);
-                  },
-                  icon: const Icon(
-                    Icons.headset_mic_outlined,
-                    size: 30,
-                  ),
-                  color: Colors.blue.shade800,
-                ),
-                const Text(
-                  'Ayuda',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 33, 82, 243),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _navBarItem(BuildContext context,
+      {required IconData icon, required String? routeName}) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: () {
+            if (routeName != null) {
+              Navigator.pushNamed(context, routeName);
+            }
+          },
+          icon: Icon(icon, size: 30),
+          color: Colors.black,
+        ),
+      ],
     );
   }
 }

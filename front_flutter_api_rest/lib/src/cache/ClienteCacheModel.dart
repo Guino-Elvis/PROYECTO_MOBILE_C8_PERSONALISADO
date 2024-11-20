@@ -34,6 +34,9 @@ class ClienteCacheModel {
   @HiveField(9)
   final String tdatos;
 
+  @HiveField(10)
+  final int? userId;
+
   ClienteCacheModel({
     this.id,
     required this.email,
@@ -45,6 +48,7 @@ class ClienteCacheModel {
     required this.direccion,
     required this.postal,
     required this.tdatos,
+    required this.userId,
   });
 
   factory ClienteCacheModel.fromJson(Map<String, dynamic> json) {
@@ -59,6 +63,7 @@ class ClienteCacheModel {
       direccion: json['direccion'],
       postal: json['postal'],
       tdatos: json['tdatos'],
+      userId: json['userId'],
     );
   }
 
@@ -74,6 +79,7 @@ class ClienteCacheModel {
       'direccion': direccion,
       'postal': postal,
       'tdatos': tdatos,
+      'userId': userId,
     };
   }
 }

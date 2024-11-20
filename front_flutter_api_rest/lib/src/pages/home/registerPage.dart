@@ -205,9 +205,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 });
               }
             },
-            btnColor: HexColor("#2C98F0"),
+            btnColor: HexColor("#77F067"),
             borderColor: Colors.white,
-            txtColor: Colors.white,
+            txtColor: Colors.black,
+            fontWeight: FontWeight.bold,
             width: MediaQuery.of(context)
                 .size
                 .width, // Establecer la altura según la pantalla
@@ -219,7 +220,7 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Text(
               'OR',
               style: TextStyle(
-                color: HexColor("#2C98F0"),
+                color: Colors.grey,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -233,7 +234,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: HexColor("#2C98F0"),
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: CircleAvatar(
@@ -245,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: HexColor("#2C98F0"),
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: CircleAvatar(
@@ -257,7 +258,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Container(
                   padding: EdgeInsets.all(2),
                   decoration: BoxDecoration(
-                    color: HexColor("#2C98F0"),
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: CircleAvatar(
@@ -279,7 +280,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text(
                   "Do you already have an account?",
                   style: TextStyle(
-                    color: Colors.grey,
+                    color: Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -292,7 +293,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text(
                     'Login',
                     style: TextStyle(
-                      color: HexColor("#2C98F0"),
+                      color: HexColor("#77F067"),
                       fontWeight: FontWeight.bold,
                     ),
                   ),

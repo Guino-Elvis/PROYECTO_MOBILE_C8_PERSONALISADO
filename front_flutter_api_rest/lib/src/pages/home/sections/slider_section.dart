@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; // Para usar Timer
+import 'package:front_flutter_api_rest/src/providers/theme.dart';
+import 'dart:async';
+
+import 'package:provider/provider.dart'; // Para usar Timer
 
 class SliderSection extends StatefulWidget {
   const SliderSection({super.key});
@@ -41,7 +44,10 @@ class _SliderSectionState extends State<SliderSection> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
+    final themeColors = themeProvider.getThemeColors();
     return Container(
+      color: themeProvider.isDiurno ? themeColors[6] : themeColors[7],
       padding: EdgeInsets.symmetric(vertical: 10),
       child: Column(
         children: [
