@@ -3,6 +3,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front_flutter_api_rest/src/routes/route.dart';
+import 'package:front_flutter_api_rest/src/services/api.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -28,7 +29,7 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        backgroundColor: HexColor('#2b96ed'),
+        backgroundColor: HexColor('#101218'),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.center, // Centra verticalmente
           crossAxisAlignment:
@@ -54,7 +55,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                   Center(
                     child: Text(
-                      'ROPA & GLAMOUR',
+                      ConfigApi.appName,
                       style: GoogleFonts.oswald(
                         textStyle: TextStyle(
                           fontSize: 55,

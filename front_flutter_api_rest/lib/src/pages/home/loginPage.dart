@@ -153,8 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     }
                   },
-                  btnColor: HexColor("#77F067"),
-                  borderColor: Colors.white,
+                  btnColor: HexColor("#d1b421"),
                   fontWeight: FontWeight.bold,
                   txtColor: Colors.black,
                   width: MediaQuery.of(context)
@@ -168,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Text(
                     'Olvidó su contraseña?',
                     style: TextStyle(
-                      color: HexColor("#77F067"),
+                      color: HexColor("#d1b421"),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -182,8 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Don't have an account?",
                         style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
                       ),
                       SizedBox(width: 8),
@@ -194,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'Registrate',
                           style: TextStyle(
-                            color: HexColor("#77F067"),
+                            color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
