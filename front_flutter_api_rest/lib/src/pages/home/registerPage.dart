@@ -205,13 +205,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 });
               }
             },
-            btnColor: HexColor("#77F067"),
-            borderColor: Colors.white,
+            btnColor: HexColor("#d1b421"),
             txtColor: Colors.black,
             fontWeight: FontWeight.bold,
-            width: MediaQuery.of(context)
-                .size
-                .width, // Establecer la altura según la pantalla
+            width: MediaQuery.of(context).size.width,
             borderRadius: 50,
           ),
           SizedBox(height: 20),
@@ -280,8 +277,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Text(
                   "Do you already have an account?",
                   style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
                 SizedBox(width: 8), // Espacio entre los dos textos
@@ -293,7 +289,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: Text(
                     'Login',
                     style: TextStyle(
-                      color: HexColor("#77F067"),
+                      color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

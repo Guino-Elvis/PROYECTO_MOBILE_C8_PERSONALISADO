@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
+import 'package:front_flutter_api_rest/src/services/api.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
         ),
         title: Center(
           child: Text(
-            'Ropa & Glamour',
+            ConfigApi.appName,
             style: TextStyle(
               fontSize: 25,
               color: themeProvider.isDiurno ? themeColors[7] : themeColors[6],

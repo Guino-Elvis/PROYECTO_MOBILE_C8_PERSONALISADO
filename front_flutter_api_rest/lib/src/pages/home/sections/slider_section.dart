@@ -61,7 +61,7 @@ class _SliderSectionState extends State<SliderSection> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzJ1Fl0eNVWMHprO9vRAvg4eJTthfp97MxKBHuhBGewr_OEM8IbCYThzAsBp3AQdXw-lg&usqp=CAU',
+                      'https://manaco.com.bo/wp-content/uploads/2023/10/07-Banner-promo-power-desktop.webp',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -71,7 +71,7 @@ class _SliderSectionState extends State<SliderSection> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzJ1Fl0eNVWMHprO9vRAvg4eJTthfp97MxKBHuhBGewr_OEM8IbCYThzAsBp3AQdXw-lg&usqp=CAU',
+                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEI3a-HlB1raAMMNN_gzWTRlZZxCpK3LZOFw&s',
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -81,7 +81,7 @@ class _SliderSectionState extends State<SliderSection> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzJ1Fl0eNVWMHprO9vRAvg4eJTthfp97MxKBHuhBGewr_OEM8IbCYThzAsBp3AQdXw-lg&usqp=CAU',
+                      'https://manaco.com.bo/wp-content/uploads/2023/10/07-Banner-promo-power-desktop.webp',
                       fit: BoxFit.cover,
                     ),
                   ),
