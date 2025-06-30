@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/pages/home/CarritoPage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/category_menu_flotante.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/services/api.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:snippet_coder_utils/hex_color.dart';
 
 class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
   final Color appBarColor;
@@ -26,7 +25,18 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
             color: themeProvider.isDiurno ? themeColors[7] : themeColors[6],
           ), // Icono del drawer
           onPressed: () {
-            Scaffold.of(context).openDrawer();
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return Dialog(
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  insetPadding: EdgeInsets.zero,
+                  child: CategoriMenu(),
+                );
+              },
+            );
           },
         ),
         title: Center(
@@ -51,7 +61,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                   ? Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: HexColor('#77F067'),
+                        color: themeColors[0],
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: InkWell(
@@ -97,7 +107,7 @@ class AppBarShow extends StatelessWidget implements PreferredSizeWidget {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color: HexColor('#77F067'),
+                            color: themeColors[0],
                             borderRadius: BorderRadius.circular(50)),
                         child: Icon(
                           Icons.shopping_cart_outlined,

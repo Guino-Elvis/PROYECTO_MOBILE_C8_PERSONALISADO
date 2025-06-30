@@ -1,12 +1,10 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal/flutter_paypal.dart';
 import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/EntregaCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
-import 'package:front_flutter_api_rest/src/components/UiHelper.dart';
 import 'package:front_flutter_api_rest/src/components/UiHelperShop.dart';
 import 'package:front_flutter_api_rest/src/components/checkout_progress.dart';
 import 'package:front_flutter_api_rest/src/controller/clienteController.dart';
@@ -633,110 +631,110 @@ class _PayPalButtonState extends State<PayPalButton> {
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: 10),
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            UsePaypal(
-                                          sandboxMode: true,
-                                          clientId: clientId,
-                                          secretKey: secret,
-                                          returnURL: retorno,
-                                          cancelURL: cancelar,
-                                          transactions: const [
-                                            {
-                                              "amount": {
-                                                "total": '10.12',
-                                                "currency": 'USD',
-                                                "details": {
-                                                  "subtotal": '10.12',
-                                                  "shipping": '0',
-                                                  "shipping_discount": 0
-                                                }
-                                              },
-                                              "description":
-                                                  "The payment transaction description.",
-                                              // "payment_options": {
-                                              //   "allowed_payment_method":
-                                              //       "INSTANT_FUNDING_SOURCE"
-                                              // },
-                                              "item_list": {
-                                                "items": [
-                                                  {
-                                                    "name": "A demo product",
-                                                    "quantity": 1,
-                                                    "price": '10.12',
-                                                    "currency": "USD"
-                                                  }
-                                                ],
+                                // InkWell(
+                                //   onTap: () {
+                                //     Navigator.of(context).push(
+                                //       MaterialPageRoute(
+                                //         builder: (BuildContext context) =>
+                                //             UsePaypal(
+                                //           sandboxMode: true,
+                                //           clientId: clientId,
+                                //           secretKey: secret,
+                                //           returnURL: retorno,
+                                //           cancelURL: cancelar,
+                                //           transactions: const [
+                                //             {
+                                //               "amount": {
+                                //                 "total": '10.12',
+                                //                 "currency": 'USD',
+                                //                 "details": {
+                                //                   "subtotal": '10.12',
+                                //                   "shipping": '0',
+                                //                   "shipping_discount": 0
+                                //                 }
+                                //               },
+                                //               "description":
+                                //                   "The payment transaction description.",
+                                //               // "payment_options": {
+                                //               //   "allowed_payment_method":
+                                //               //       "INSTANT_FUNDING_SOURCE"
+                                //               // },
+                                //               "item_list": {
+                                //                 "items": [
+                                //                   {
+                                //                     "name": "A demo product",
+                                //                     "quantity": 1,
+                                //                     "price": '10.12',
+                                //                     "currency": "USD"
+                                //                   }
+                                //                 ],
 
-                                                // shipping address is not required though
+                                //                 // shipping address is not required though
 
-                                                "shipping_address": {
-                                                  "recipient_name":
-                                                      "hola soy juan",
-                                                  "line1": "Travis County",
-                                                  "line2": "",
-                                                  "city": "Austin",
-                                                  "country_code": "US",
-                                                  "postal_code": "73301",
-                                                  "phone": "+00000000",
-                                                  "state": "Texas"
-                                                },
-                                              }
-                                            }
-                                          ],
-                                          note:
-                                              "Contact us for any questions on your order.",
-                                          onSuccess: (Map params) async {
-                                            print("onSuccess: $params");
-                                            await _procesarPago();
-                                            UiHelperShop.ShowAlertDialog(
-                                              context,
-                                              message:
-                                                  'El pago fue Exitoso. Felicidades',
-                                              navigateTo:
-                                                  AppRoutes.userhomeRoute,
-                                            );
-                                          },
-                                          onError: (error) {
-                                            print("onError: $error");
-                                            UiHelperShop.ShowAlertDialog(
-                                              context,
-                                              message:
-                                                  'Hubo un error con el pago. Inténtalo nuevamente.',
-                                              navigateTo:
-                                                  AppRoutes.pasarelaRoute,
-                                            );
-                                          },
-                                          onCancel: (params) {
-                                            print('cancelled: $params');
-                                            UiHelperShop.ShowAlertDialog(
-                                              context,
-                                              message: 'El pago fue cancelado',
-                                              navigateTo:
-                                                  AppRoutes.pasarelaRoute,
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: _logos('assets/paypal.png',
-                                      Colors.blue, Colors.white),
-                                ),
-                                SizedBox(height: 20),
-                                Text(
-                                  'Cotisa tu carrito',
-                                  style: TextStyle(
-                                    color: Colors.blue.shade900,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 10),
+                                //                 "shipping_address": {
+                                //                   "recipient_name":
+                                //                       "hola soy juan",
+                                //                   "line1": "Travis County",
+                                //                   "line2": "",
+                                //                   "city": "Austin",
+                                //                   "country_code": "US",
+                                //                   "postal_code": "73301",
+                                //                   "phone": "+00000000",
+                                //                   "state": "Texas"
+                                //                 },
+                                //               }
+                                //             }
+                                //           ],
+                                //           note:
+                                //               "Contact us for any questions on your order.",
+                                //           onSuccess: (Map params) async {
+                                //             print("onSuccess: $params");
+                                //             await _procesarPago();
+                                //             UiHelperShop.ShowAlertDialog(
+                                //               context,
+                                //               message:
+                                //                   'El pago fue Exitoso. Felicidades',
+                                //               navigateTo:
+                                //                   AppRoutes.userhomeRoute,
+                                //             );
+                                //           },
+                                //           onError: (error) {
+                                //             print("onError: $error");
+                                //             UiHelperShop.ShowAlertDialog(
+                                //               context,
+                                //               message:
+                                //                   'Hubo un error con el pago. Inténtalo nuevamente.',
+                                //               navigateTo:
+                                //                   AppRoutes.pasarelaRoute,
+                                //             );
+                                //           },
+                                //           onCancel: (params) {
+                                //             print('cancelled: $params');
+                                //             UiHelperShop.ShowAlertDialog(
+                                //               context,
+                                //               message: 'El pago fue cancelado',
+                                //               navigateTo:
+                                //                   AppRoutes.pasarelaRoute,
+                                //             );
+                                //           },
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                //   child: _logos('assets/paypal.png',
+                                //       Colors.blue, Colors.white),
+                                // ),
+                                // SizedBox(height: 20),
+                                // Text(
+                                //   'Cotisa tu carrito',
+                                //   style: TextStyle(
+                                //     color: Colors.blue.shade900,
+                                //     fontSize: 15,
+                                //     fontWeight: FontWeight.bold,
+                                //   ),
+                                //   textAlign: TextAlign.center,
+                                // ),
+                                // SizedBox(height: 10),
                                 InkWell(
                                   onTap: () {
                                     _enviarWapsap();

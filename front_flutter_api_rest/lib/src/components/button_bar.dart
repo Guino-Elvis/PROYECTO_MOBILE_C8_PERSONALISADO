@@ -33,15 +33,15 @@ class BottomNavBarFlex extends StatelessWidget {
                   icon: CupertinoIcons.rectangle_grid_2x2,
                   routeName: '/categoria_page',
                 ),
+                // _navBarItem(
+                //   context,
+                //   icon: Icons.shopping_bag_outlined,
+                //   routeName: '/pedidos_page',
+                // ),
                 _navBarItem(
                   context,
-                  icon: Icons.shopping_bag_outlined,
-                  routeName: '/pedidos_page',
-                ),
-                _navBarItem(
-                  context,
-                  icon: Icons.headset_mic_outlined,
-                  routeName: null,
+                  icon: Icons.settings_outlined,
+                  routeName: '/setting_page',
                 ),
               ],
             ),

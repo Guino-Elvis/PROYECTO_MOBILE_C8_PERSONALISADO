@@ -1,20 +1,16 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/components/app_bar_carrito.dart';
-import 'package:front_flutter_api_rest/src/components/app_bar_create.dart';
-import 'package:front_flutter_api_rest/src/components/app_bar_shop.dart';
-import 'package:front_flutter_api_rest/src/components/drawers.dart';
 import 'package:front_flutter_api_rest/src/controller/categoriaController.dart';
 import 'package:front_flutter_api_rest/src/controller/productoController.dart';
 import 'package:front_flutter_api_rest/src/controller/sub_categoriaController.dart';
 import 'package:front_flutter_api_rest/src/model/categoriaModel.dart';
 import 'package:front_flutter_api_rest/src/model/productoModel.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
-import 'package:front_flutter_api_rest/src/routes/route.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
 import 'package:provider/provider.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/producto_slider_image.dart';
 
 class CategoriaPageDetail extends StatefulWidget {
   final CategoriaModel categoria;
@@ -191,15 +187,22 @@ class _CategoriaPageDetailState extends State<CategoriaPageDetail> {
                                 onTap: () {},
                                 child: Column(
                                   children: [
-                                    CachedNetworkImage(
-                                      imageUrl: producto.foto.toString(),
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Image.asset('assets/nofoto.jpg'),
-                                      fit: BoxFit.cover,
-                                      height: 150,
+                                    // CachedNetworkImage(
+                                    //   imageUrl: producto.foto.toString(),
+                                    //   placeholder: (context, url) =>
+                                    //       CircularProgressIndicator(),
+                                    //   errorWidget: (context, url, error) =>
+                                    //       Image.asset('assets/nofoto.jpg'),
+                                    //   fit: BoxFit.cover,
+                                    //   height: 150,
+                                    //   width: 150,
+                                    // ),
+                                    SizedBox(
+                                      height:
+                                          150, // o cualquier valor que quieras
                                       width: 150,
+                                      child: ProductoImageSlider(
+                                          producto: producto),
                                     ),
                                     Container(
                                       height: 100,

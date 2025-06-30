@@ -6,8 +6,10 @@ import 'package:front_flutter_api_rest/src/cache/ClienteCacheModel.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/components/app_bar_carrito.dart';
 import 'package:front_flutter_api_rest/src/components/app_bar_create.dart';
+import 'package:front_flutter_api_rest/src/model/productoModel.dart';
 import 'package:front_flutter_api_rest/src/pages/cliente_crud/cliente_create_page.dart';
 import 'package:front_flutter_api_rest/src/pages/home/UserHomePage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/producto_slider_image.dart';
 import 'package:front_flutter_api_rest/src/pages/home/sections/search_section.dart';
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/routes/route.dart';
@@ -83,14 +85,9 @@ class _CarritoPageState extends State<CarritoPage> {
                       child: Container(
                         child: Row(
                           children: [
-                            Container(
-                              color: Colors.transparent,
-                              child: Image.asset(
-                                'assets/logo.png',
-                                width: 70,
-                                height: 70,
-                                fit: BoxFit.contain,
-                              ),
+                            Icon(
+                              Icons.arrow_back_outlined,
+                              size: 30,
                             ),
                             SizedBox(width: 5),
                             Container(
@@ -219,13 +216,14 @@ class _CarritoPageState extends State<CarritoPage> {
                                     ),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: CachedNetworkImage(
-                                        imageUrl: product.foto.toString(),
-                                        placeholder: (context, url) =>
-                                            CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            Image.asset('assets/nofoto.jpg'),
-                                        fit: BoxFit.cover,
+                                      child: SizedBox(
+                                        height: 150,
+                                        width: 150,
+                                        child: ProductoImageSlider(
+                                          producto:
+                                              ProductoModel.fromCacheModel(
+                                                  product),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -318,8 +316,7 @@ class _CarritoPageState extends State<CarritoPage> {
                                                   child: Container(
                                                     padding: EdgeInsets.all(5),
                                                     decoration: BoxDecoration(
-                                                      color:
-                                                          HexColor('#77F067'),
+                                                      color: themeColors[0],
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               50),

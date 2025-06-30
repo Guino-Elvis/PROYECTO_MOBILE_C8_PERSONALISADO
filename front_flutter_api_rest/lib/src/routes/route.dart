@@ -10,6 +10,7 @@ import 'package:front_flutter_api_rest/src/pages/home/Validator.dart';
 import 'package:front_flutter_api_rest/src/pages/home/UserHomePage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/loginPage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/registerPage.dart';
+import 'package:front_flutter_api_rest/src/pages/home/settingPage.dart';
 import 'package:front_flutter_api_rest/src/pages/home/welcome.dart';
 import 'package:front_flutter_api_rest/src/pages/producto_crud/producto_list_page.dart';
 import 'package:front_flutter_api_rest/src/pages/sub_categoria_crud/sub_category_list_page.dart';
@@ -34,6 +35,7 @@ class AppRoutes {
   static const String pasarelaRoute = '/paymentPasarela';
   static const String categoriaRoute = '/categoria_page';
   static const String pedidosRoute = '/pedidos_page';
+  static const String settingRoute = '/setting_page';
 
   static Map<String, WidgetBuilder> getRoutes() {
     return {
@@ -52,6 +54,7 @@ class AppRoutes {
       carritoRoute: (context) => CarritoPage(cliente: null),
       categoriaRoute: (context) => CategoriaPage(),
       pedidosRoute: (context) => PedidosPage(),
+      settingRoute: (context) => SettingPage(),
       pasarelaRoute: (context) => PayPalButton(cliente: null, entrega: null),
     };
   }

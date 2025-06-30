@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/controller/productoController.dart';
 import 'package:front_flutter_api_rest/src/model/productoModel.dart';
+import 'package:front_flutter_api_rest/src/pages/home/sections/producto_slider_image.dart';
 
 import 'package:front_flutter_api_rest/src/providers/theme.dart';
 import 'package:front_flutter_api_rest/src/services/shoping/carrito.dart';
@@ -91,18 +92,23 @@ class _ProductoSectionState extends State<ProductoSection> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: producto.foto.toString(),
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    errorWidget: (context, url, error) => Image.asset(
-                      'assets/nofoto.jpg',
-                      fit: BoxFit.cover,
-                    ),
-                    fit: BoxFit.cover, // Ajuste de imagen
+                  // CachedNetworkImage(
+                  //   imageUrl: producto.foto.toString(),
+                  //   placeholder: (context, url) => Center(
+                  //     child: CircularProgressIndicator(),
+                  //   ),
+                  //   errorWidget: (context, url, error) => Image.asset(
+                  //     'assets/nofoto.jpg',
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  //   fit: BoxFit.cover, // Ajuste de imagen
+                  //   height: 200,
+                  //   width: 200,
+                  // ),
+                  SizedBox(
                     height: 200,
                     width: 200,
+                    child: ProductoImageSlider(producto: producto, height: 200),
                   ),
                   Container(
                     height: 120,

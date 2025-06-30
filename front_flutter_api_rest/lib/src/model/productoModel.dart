@@ -1,3 +1,4 @@
+import 'package:front_flutter_api_rest/src/cache/ProductoCacheModel.dart';
 import 'package:front_flutter_api_rest/src/model/imagenModel.dart';
 
 class ProductoModel {
@@ -43,6 +44,20 @@ class ProductoModel {
       estado: json['estado'] as String?,
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
+    );
+  }
+
+  factory ProductoModel.fromCacheModel(ProductoCacheModel cache) {
+    return ProductoModel(
+      id: cache.id,
+      nombre: cache.nombre,
+      descrip: null,
+      foto: cache.foto,
+      subCategoria: null,
+      imagenes: null,
+      estado: null,
+      createdAt: null,
+      updatedAt: null,
     );
   }
 

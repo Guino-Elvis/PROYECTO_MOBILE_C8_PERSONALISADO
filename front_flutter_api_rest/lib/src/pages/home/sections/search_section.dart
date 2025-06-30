@@ -65,21 +65,6 @@ class SearchSection extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 10),
-              Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: HexColor('#77F067'),
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Icon(
-                    CupertinoIcons.slider_horizontal_3,
-                    color: themeProvider.isDiurno
-                        ? themeColors[6]
-                        : themeColors[6],
-                  ),
-                ),
-              ),
             ],
           ),
         ],

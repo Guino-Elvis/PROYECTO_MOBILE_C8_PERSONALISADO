@@ -57,7 +57,7 @@ class AppBarCarrito extends StatelessWidget {
                   ? Container(
                       padding: EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: HexColor('#77F067'),
+                        color: themeColors[0],
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: InkWell(
@@ -103,7 +103,7 @@ class AppBarCarrito extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                            color: HexColor('#77F067'),
+                            color: themeColors[0],
                             borderRadius: BorderRadius.circular(50)),
                         child: Icon(
                           Icons.shopping_cart_outlined,

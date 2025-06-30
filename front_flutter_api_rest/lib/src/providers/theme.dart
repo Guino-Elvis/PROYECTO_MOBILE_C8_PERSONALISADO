@@ -11,7 +11,8 @@ class ThemeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  static Color bluePersonalizado_0 = HexColor("#77F067");
+  static Color personalizado_0 = HexColor("#CDAF1A");
+  // static Color personalizado_0 = HexColor("#77F067");
   static Color fondodark_1 = HexColor("#1A1B1F");
   static Color fondodarkcard_2 = HexColor("#161719");
   static Color color3 = Colors.orange;
@@ -27,7 +28,7 @@ class ThemeProvider extends ChangeNotifier {
 
   List<Color> diatheme() {
     return [
-      bluePersonalizado_0,
+      personalizado_0,
       fondodark_1,
       fondodarkcard_2,
       color3,
@@ -45,7 +46,7 @@ class ThemeProvider extends ChangeNotifier {
 
   List<Color> nochetheme() {
     return [
-      bluePersonalizado_0,
+      personalizado_0,
       fondodark_1,
       fondodarkcard_2,
       color3,

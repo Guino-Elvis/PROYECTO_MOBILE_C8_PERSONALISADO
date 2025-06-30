@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:front_flutter_api_rest/src/components/app_bar_shop.dart';
 import 'package:front_flutter_api_rest/src/components/button_bar.dart';
-import 'package:front_flutter_api_rest/src/components/drawers.dart';
-import 'package:front_flutter_api_rest/src/pages/home/sections/category_section.dart';
 import 'package:front_flutter_api_rest/src/pages/home/sections/producto_section.dart';
 import 'package:front_flutter_api_rest/src/pages/home/sections/search_section.dart';
 import 'package:front_flutter_api_rest/src/pages/home/sections/producto_subcategoria_section.dart';
@@ -39,15 +37,13 @@ class _UserHomePageState extends State<UserHomePage> {
       appBar: AppBarShow(
         appBarColor: themeProvider.isDiurno ? themeColors[6] : themeColors[7],
       ),
-      drawer: NavigationDrawerWidget(),
+      // drawer: NavigationDrawerWidget(),
       backgroundColor: themeProvider.isDiurno ? themeColors[6] : themeColors[7],
       body: SingleChildScrollView(
         child: Column(
           children: [
             SearchSection(),
             SliderSection(),
-            SizedBox(height: 10),
-            CategoriSection(),
             SizedBox(height: 10),
             SubCategoriSection(),
             SizedBox(height: 10),
